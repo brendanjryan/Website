@@ -1,25 +1,23 @@
 $(document).ready(function(){
 
-
-  //make icons appear when "connect" button is clicked
   $('.connect').click(function(){
 
-    //reset all animations
+    //hard animations reset
     $('.icons').removeClass('animated fadeInDown');
     $('.icons').removeClass('animated fadeOutUp');
 
-   if( $('.icons').hasClass('not-visible') ){ //if the icons hidden class is not active
-
-    console.log("icons hidden -- now fading down")
+   if( $('.icons').hasClass('not-visible') ){
+    //fade icons in
     $('.icons').removeClass('not-visible');
     $('.icons').addClass('animated fadeInDown');
    } else {
     $('.icons').addClass('animated fadeOutUp');
-    //a timeout is needed to allowthe animation to finish before the
-    //hidden attribute is applied again
+    //wait for animation to finish until class is applied
     setTimeout(function(){
       $('.icons').addClass('not-visible');
     }, 400);
     }
   });
+
+
 });
