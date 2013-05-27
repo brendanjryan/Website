@@ -2,8 +2,18 @@ body{
   color: #333;
   font: 13px/13px Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
-  background: #F0F0F0;
+
+   background: rgb(215, 215, 215);
+   background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+    background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:     -ms-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+
 }
+
+
 
 #container{
   position: absolute;
