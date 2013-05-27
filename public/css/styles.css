@@ -4,9 +4,9 @@ body{
   text-rendering: optimizeLegibility;
   background-color: : #F0F0F0;
 
-  background-image: : -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
-  background-image: : -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background-image: :    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+  background-image: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+  background-image:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
   background-image:     -ms-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
   background-image:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
   background-image:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
