@@ -21,7 +21,7 @@ body{
   background-image:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
 }
 
-#container{
+.container{
   text-align: center;
   margin-top: 7%;
 }
