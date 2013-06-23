@@ -1,7 +1,6 @@
 html{
   height: 100%;
   width: 100%;
-
 }
 
 body{
@@ -11,7 +10,7 @@ body{
   color: #333;
   font: 13px/13px Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
-  background-color: : #F0F0F0;
+  background-color: #F0F0F0;
 
   background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
   background-image: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
@@ -39,8 +38,6 @@ body{
   -moz-border-radius: 99em;
   border-radius: 99em;
 
-  /*border: 2px solid #eee; */
-
   -moz-box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
@@ -52,7 +49,7 @@ body{
 
 a{
   color: #777;
-  padding: 0px 2px;
+  padding: 0 2px;
   text-decoration: none;
   font-size: 15px;
 }
@@ -63,19 +60,19 @@ a:hover{
 }
 
 article{
-  margin: 6px 0px 0px 0px;
+  margin: 6px 0 0 0;
   padding: 10px;
 }
 
 ul{
-  margin: -5px 0px 0px 0px;
+  margin: -5px 0 0 0;
   text-align: center;
 }
 
 ul li{
   display: inline-block;
   list-style: none;
-  margin: 0px 2px;
+  margin: 0 2px;
 }
 
 .icons{
@@ -83,6 +80,6 @@ ul li{
 }
 
 .not-visible{
+  visibility: hidden;
   display: none;
 }
-
