@@ -33,7 +33,7 @@ body{
   -moz-border-radius: 150px;
   border-radius: 150px;
   background: url('../images/self.jpg') no-repeat;
-  margin-left: 44%;
+  margin: 0 auto;
   -moz-background-size: 100% 100%;
   -webkit-background-size: 100% 100%;
   background-size: 100% 100%;
@@ -43,6 +43,7 @@ body{
 }
 
 .name{
+  margin: 0 auto;
   margin-top: -15px;
 }
 
@@ -71,7 +72,7 @@ ul{
 ul li{
   display: inline-block;
   list-style: none;
-  margin: 0 2px;
+  margin: 0 auto;
 }
 
 .icons{
