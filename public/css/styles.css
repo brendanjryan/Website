@@ -33,7 +33,7 @@ body{
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-
+  border: 2px solid white;
   -webkit-border-radius: 99em;
   -moz-border-radius: 99em;
   border-radius: 99em;
