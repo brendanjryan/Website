@@ -12,12 +12,12 @@ body{
   text-rendering: optimizeLegibility;
   background-color: #F0F0F0;
 
-  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
-  background-image: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background-image:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background-image:     -ms-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background-image:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background-image:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(220, 220, 220)));
+  background-image: -webkit-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
+  background-image:    -moz-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
+  background-image:     -ms-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
+  background-image:      -o-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
+  background-image:         radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
 }
 
 #container{
@@ -51,7 +51,7 @@ a{
   color: #777;
   padding: 0 2px;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 a:hover{
@@ -65,7 +65,7 @@ article{
 }
 
 ul{
-  margin: -5px 0 0 0;
+  margin: 0 auto;
   text-align: center;
 }
 
