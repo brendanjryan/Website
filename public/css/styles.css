@@ -40,7 +40,6 @@ section{
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0,0,0,.1);
   overflow: hidden;
-
 }
   .content:first-child {
     padding-top: 1.5%;
