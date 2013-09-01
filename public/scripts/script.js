@@ -1,23 +1,17 @@
-$(document).ready(function(){
+(function(){
 
-  $('.connect').click(function(){
+  var changeTime = 5000;
+  $strings = $('.infoStrings');
 
-    //hard animations reset
-    $('.icons').removeClass('animated fadeInDown');
-    $('.icons').removeClass('animated fadeOutUp');
+  currentString = -1;
+  showNextString = function(){
+    ++currentString;
+    $strings.eq( currentString % $strings.length)
+    .fadeIn(3000)
+    .delay(5000)
+    .fadeOut(3000, showNextString);
+  }
 
-   if( $('.icons').hasClass('not-visible') ){
-    //fade icons in
-    $('.icons').removeClass('not-visible');
-    $('.icons').addClass('animated fadeInDown');
-   } else {
-    $('.icons').addClass('animated fadeOutUp');
-    //wait for animation to finish until class is applied
-    setTimeout(function(){
-      $('.icons').addClass('not-visible');
-    }, 400);
-    }
-  });
+  showNextString();
+})();
 
-
-});
