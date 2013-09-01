@@ -7,21 +7,44 @@ body{
   height: 100%;
   width: 100%;
   color: #333;
-  font: 13px/13px Helvetica, sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+ font-weight: 300;
   text-rendering: optimizeLegibility;
-  background-color: #F0F0F0;
-  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(220, 220, 220)));
-  background-image: -webkit-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
-  background-image:    -moz-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
-  background-image:     -ms-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
-  background-image:      -o-radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
-  background-image:         radial-gradient(rgb(240, 240, 240), rgb(220, 220, 220));
+  background-color: #F5F5F5;
 }
 
-#container{
+section{
+  margin: 5% 0;
+}
+  section.name{
+    margin: 0;
+  }
+  section.info{
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+.name > h2{
+  line-height: 20px;
+}
+
+.container{
   text-align: center;
   margin-top: 7%;
 }
+
+.content{
+  margin: 0 auto;
+  width: 30%;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  overflow: hidden;
+
+}
+  .content:first-child {
+    padding-top: 1.5%;
+  }
 
 .portrait{
   width: 150px;
@@ -40,10 +63,6 @@ body{
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
-.name{
-  margin: 0 auto;
-  margin-top: -15px;
-}
 
 a{
   color: #777;
@@ -51,33 +70,26 @@ a{
   text-decoration: none;
   font-size: 16px;
 }
-
-a:hover{
-  color: #38d;
-  text-decoration: none;
-}
-
-article{
-  margin: 6px 0 0 0;
-  padding: 10px;
-}
+  a:hover{
+    color: #38d;
+    text-decoration: none;
+  }
 
 ul{
   margin: 0 auto;
-  text-align: center;
+  padding-top: 5%;
 }
 
 ul li{
   display: inline-block;
   list-style: none;
-  margin: 0 auto;
+  margin: 0 2%;
 }
 
 .icons{
-  margin-top: 7px;
+  border-top: 2px solid #BDBDBD;
 }
 
-.not-visible{
-  visibility: hidden;
+.infoStrings{
   display: none;
 }
