@@ -1,94 +1,42 @@
- html{
+body {
+  margin: 0;
+  font-family: "Vidaloka", serif
+}
+.container {
+  position: absolute;
   height: 100%;
   width: 100%;
 }
-
-body{
-  height: 100%;
-  width: 100%;
-  color: #333;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
- font-weight: 300;
-  text-rendering: optimizeLegibility;
-  background-color: #F5F5F5;
-}
-
-section{
-  margin: 7.5% 0;
-}
-  section.name{
-    margin: 0;
-  }
-  section.info{
-    font-size: 1.1rem;
-    font-weight: 500;
-  }
-
-.name > h2{
-  line-height: 20px;
-}
-
-.container{
-  text-align: center;
-  margin-top: 7%;
+canvas{
+  display: block;
 }
 
 .content{
-  margin: 0 auto;
-  width: 300px;
-  background-color: #FFFFFF;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  overflow: hidden;
-}
-  .content:first-child {
-    padding-top: 1.5%;
-  }
+  transition: opacity 0.4s ease-out;
+  margin: -280px -180px;
+  text-align: center;
+  position: absolute;
+  height: 560px;
+  width: 360px;
+  left: 50%;
+  top: 50%;
 
-.portrait{
-  width: 150px;
-  height: 150px;
-  border: 2.5px solid white;
-  -webkit-border-radius: 150px;
-  -moz-border-radius: 150px;
-  border-radius: 150px;
-  background: url('../images/self.jpg') no-repeat;
-  margin: 0 auto;
-  -moz-background-size: 100% 100%;
-  -webkit-background-size: 100% 100%;
-  background-size: 100% 100%;
-  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 8px rgba(0, 0, 0,.3);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+
+
+
+  color: #333;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  text-rendering: optimizeLegibility;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.content > article{
+  margin-top: 10%;
+  padding: 25px;
 }
 
 
-a{
-  color: #777;
-  padding: 0 2px;
-  text-decoration: none;
-  font-size: 16px;
-}
-  a:hover{
-    color: #38d;
-    text-decoration: none;
-  }
-
-ul{
-  margin: 0 auto;
-  padding-top: 7.5%;
-}
-
-ul li{
-  display: inline-block;
-  list-style: none;
-  margin: 0 2%;
-}
-
-.icons{
-  border-top: 1px solid #BDBDBD;
-}
-
-.infoStrings{
-  display: none;
+.content > article h1{
+  font-size: 1.7rem;
 }
