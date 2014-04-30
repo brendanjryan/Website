@@ -33,8 +33,8 @@
     maxLimit: null,
     minDistance: 20,
     maxDistance: 400,
-    autopilot: false,
-    draw: true,
+    autopilot: true,
+    draw: false,
     bounds: FSS.Vector3.create(),
     step: FSS.Vector3.create(
       Math.randomInRange(0.2, 1.0),
