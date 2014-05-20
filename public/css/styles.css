@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .container {
   position: absolute;
@@ -12,9 +12,6 @@ canvas{
 }
 
 .content{
-
-  transition: opacity 0.4s ease-out;
-
   margin: -280px -205px;
   text-align: center;
   position: absolute;
@@ -34,6 +31,32 @@ canvas{
 }
 
 
+hr.faded{
+  clear: both;
+  float: none;
+  width: 100%;
+  height: 1px;
+  margin: 1.4em 0;
+  border: none;
+  background: #ddd;
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    right bottom,
+    color-stop(0, rgba(255,255,255,0.5)),
+    color-stop(0.1, rgb(221,221,221)),
+    color-stop(0.9, rgb(221,221,221)),
+    color-stop(1, rgba(255,255,255,0.5))
+    );
+  background-image: -moz-linear-gradient(
+    left center,
+    rgba(255,255,255,0.5) 0%,
+    rgb(221,221,221) 10%,
+    rgb(221,221,221) 90%,
+    rgba(255,255,255,0.5) 100%
+    );
+}
+
 ul {
   list-style: none;
   padding: 0px;
@@ -45,8 +68,12 @@ ul li{
 
 }
 
-article.content section {
-  margin: 35px 0;
+section.bio{
+  margin: 0;
+}
+
+section.works {
+  margin: 50px 0;
 }
 .container > header {
   margin: 35px 0;
@@ -62,3 +89,21 @@ a {
 a:hover{
   color: inherit;
 }
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeInUp {
+  animation:fadeInUp 2s infinite;
+  -webkit-animation:fadeInUp 2s infinite;
+}
+
