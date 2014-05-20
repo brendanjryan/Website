@@ -30,7 +30,6 @@ canvas{
   text-rendering: optimizeLegibility;
 }
 
-
 hr.faded{
   clear: both;
   float: none;
@@ -106,4 +105,71 @@ a:hover{
   animation:fadeInUp 2s infinite;
   -webkit-animation:fadeInUp 2s infinite;
 }
+
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+  .content{
+
+    margin: -280px -180px;
+    text-align: center;
+    position: absolute;
+    height: 560px;
+    width: 290px;
+    left: 50%;
+    top: 50%;
+    background-color: rgba(255,255,255, .8);
+    padding: 0 25px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    overflow: hidden;
+    color: #333;
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+  }
+
+
+  section.bio{
+    padding: 0 25px;
+  }
+
+  section.works {
+    margin: 25px 0;
+  }
+
+  body{
+    font-size: .9rem;
+  }
+
+  .container > header{
+    font-size: 1rem;
+  }
+
+}
+
+
+
+
+
+/* iPhone 4 -*/
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+
+  .content{
+    margin: -260px -180px;
+  }
+}
+/** iphone 3 **/
+media only screen
+and (device-width:320px)
+and (device-height:480px)
+and (-webkit-device-pixel-ratio: 1) {
+  .content{
+    margin: -260px -180px;
+  }
+}
+
+
 
