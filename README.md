@@ -1,3 +1,3 @@
 Website
 =======
-www.BrendanJRyan.com
+www.brendan-ryan.me
