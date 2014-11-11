@@ -10,9 +10,6 @@
   WHITE = '#ffffff'
   ;
 
-
-
-
   //------------------------------
   // Mesh Properties
   //------------------------------
@@ -378,11 +375,7 @@
     render();
   }
 
-
-
-  // Let there be light!
   initialise();
-
 
 })();
 
