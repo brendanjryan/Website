@@ -56,7 +56,8 @@ a {
 @media only screen
 and (min-device-width : 320px)
 and (max-device-width : 480px) {
-  hr.faded {
-    width: 80%;
+  .content {
+    width: 300px;
+    margin: 25px;
   }
 }
