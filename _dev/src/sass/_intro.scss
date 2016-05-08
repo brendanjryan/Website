@@ -1,5 +1,5 @@
 .intro {
-    margin: 100px 0 0 100px;
+    margin: 25px 0 0 25px;
 
     .links {
         margin: 50px 0;
@@ -20,4 +20,10 @@
     }
 
 
+}
+
+@media (--breakpoint-not-small) {
+    .intro {
+        margin: 100px 0 0 100px;
+    }
 }
