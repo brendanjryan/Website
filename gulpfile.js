@@ -1,13 +1,16 @@
 var gulp = require('gulp');
 
-var sass = require('gulp-sass');
-var gutil = require('gulp-util');
-var plumber = require('gulp-plumber');
-var rename = require('gulp-rename');
-var minifyCSS = require('gulp-minify-css');
-var prefixer = require('gulp-autoprefixer');
 var connect = require('gulp-connect');
 var cp = require('child_process');
+var deploy = require("gulp-gh-pages");
+var gutil = require('gulp-util');
+var minifyCSS = require('gulp-minify-css');
+var plumber = require('gulp-plumber');
+var prefixer = require('gulp-autoprefixer');
+var rename = require('gulp-rename');
+var sass = require('gulp-sass');
+var postcss = require('gulp-postcss');
+var customMedia = require("postcss-custom-media");
 
 // Path Vars
 var BASE_PATH = './';
@@ -36,6 +39,11 @@ var ASSETS = {
 // BUILD TASKS
 
 gulp.task('css', function() {
+
+    var processors = [
+        customMedia
+    ];
+
     return gulp.src(ASSETS.css)
         .pipe(plumber(function(error) {
             gutil.log(gutil.colors.red(error.message));
@@ -44,6 +52,7 @@ gulp.task('css', function() {
         .pipe(sass())
         .pipe(prefixer('last 3 versions', 'ie 9'))
         .pipe(minifyCSS())
+        .pipe(postcss(processors))
         .pipe(rename({
             dirname: DIST + '/css',
             basename: 'styles'
@@ -84,6 +93,10 @@ gulp.task('watch', function() {
     gulp.watch(ASSETS.jekyll, ['jekyll']);
 });
 
+gulp.task('deploy', ['jekyll'], function () {
+    return gulp.src('./_site/**/*')
+        .pipe(deploy());
+});
 
 
 gulp.task('default', ['jekyll', 'server', 'watch']);
