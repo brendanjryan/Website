@@ -1,5 +1,12 @@
+// design system imports
 @import 'reset';
+@import 'type';
+@import 'colors';
 
+// global imports
 @import 'global';
+
+// page level (ugh) imports
+@import 'intro';
 
 // This file should only be imports
