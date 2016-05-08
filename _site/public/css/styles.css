@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", HelveticaNeue, "TeX Gyre Heros", TeXGyreHeros, FreeSans, "Nimbus Sans L", "Liberation Sans", Arimo, Helvetica, Arial, sans-serif;
+}
+
+
+hr.faded {
+  border-bottom: .1px solid #9c9c9c;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+header h1 {
+  font-weight: 100;
+}
+
+header img {
+  border-radius: 50px;
+}
+
+.content{
+  margin: 50px;
+  max-width: 400px;
+  overflow: hidden;
+  color: #333;
+  font-weight: 300;
+  line-height: 25px;
+  text-rendering: optimizeLegibility;
+}
+
+ul {
+  list-style: none;
+  padding: 0px;
+}
+
+ul li{
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.social-links i {
+  color: #9c9c9c;
+}
+
+.social-links i:hover {
+  color: #444444;
+}
+
+a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+  .content {
+    width: 300px;
+    margin: 25px;
+  }
+}
