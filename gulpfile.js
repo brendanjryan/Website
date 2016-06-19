@@ -96,7 +96,9 @@ gulp.task('watch', function() {
 
 gulp.task('deploy', ['jekyll'], function () {
     return gulp.src('./_site/**/*')
-        .pipe(deploy());
+        .pipe(deploy({
+            force: true
+        }));
 });
 
 
