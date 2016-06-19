@@ -1,0 +1,11 @@
+---
+layout: photo_story
+title: Iceland
+date: Spring, 2016
+---
+
+{% for photo in site.data.iceland.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}
+
+

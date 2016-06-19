@@ -31,7 +31,8 @@ var ASSETS = {
         '_posts/*',
         '_layouts/*',
         '_includes/*' ,
-        'assets/**/*'
+        'assets/**/*',
+        '_data/**/*'
     ]
 };
 
@@ -73,7 +74,7 @@ gulp.task('js', function() {
 
 
 gulp.task('jekyll', ['css', 'js'], function(code) {
-    return cp.spawn('jekyll', ['build'], {stdio: 'inherit'})
+    return cp.spawn('jekyll', ['build', '--incremental'], {stdio: 'inherit'})
         .on('error', function(error) {
             gutil.log(gutil.colors.red(error.message))
         })
