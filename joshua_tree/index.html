@@ -1,0 +1,9 @@
+---
+layout: photo_story
+title: Joshua Tree
+date: Fall, 2016
+---
+
+{% for photo in site.data.joshua_tree.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}

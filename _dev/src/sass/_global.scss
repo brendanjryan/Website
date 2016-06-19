@@ -1,43 +1,5 @@
 // Site-wide styles
-
-body {
-    font-family: $font;
-    background: #FFF;
+img {
+    min-height: 400px;
 }
-
-header,
-p,
-a {
-    color: $medium-black;
-}
-
-a {
-    text-decoration: none;
-    transition: color .15s ease-in;
-
-    &:visited,
-    &:hover,
-    &:active,
-    &:focus {
-        transition: color .15s ease-in;
-    }
-}
-
-h1 {
-    font-size: $x-large-text;
-}
-
-h2 {
-    font-size: $large-text;
-}
-
-h3 {
-    font-size: $medium-text;
-}
-
-h4 {
-    font-size: $small-text;
-}
-
-// h5 and h6 should not be used.
 
