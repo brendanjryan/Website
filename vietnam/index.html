@@ -1,0 +1,9 @@
+---
+layout: photo_story
+title: Vietnam
+date: Winter, 2015
+---
+
+{% for photo in site.data.vietnam.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}
