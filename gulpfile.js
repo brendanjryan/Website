@@ -11,13 +11,14 @@ var rename = require('gulp-rename');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 var customMedia = require("postcss-custom-media");
+var imageMin = require('gulp-imagemin');
 
 // Path Vars
 var BASE_PATH = './';
 var DEV = BASE_PATH + '_dev/';
 var SRC = DEV + 'src/';
 var SITE_PATH = BASE_PATH + '_site/'
-var DIST = SITE_PATH + 'assets/';
+var DIST = BASE_PATH + 'assets/';
 
 var ASSETS = {
     js: [
@@ -26,12 +27,14 @@ var ASSETS = {
     css: [
         SRC + '/sass/**/*.scss'
     ],
+    img: [
+        SRC + '/img/**/*'
+    ],
     jekyll: [
         'index.html',
         '_posts/*',
         '_layouts/*',
         '_includes/*' ,
-        'assets/**/*',
         '_data/**/*'
     ]
 };
@@ -72,14 +75,30 @@ gulp.task('js', function() {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('img', function() {
+     return gulp.src(ASSETS.img)
+        .pipe(plumber(function(error) {
+            gutil.log(gutil.colors.red(error.message));
+            gulp.task('img').emit('end');
+        }))
 
-gulp.task('jekyll', ['css', 'js'], function(code) {
+        .pipe(imageMin({
+            progressive: true,
+            optimizationLevel: 5,
+        }))
+        .pipe(rename({dirname: DIST + '/img'}))
+        .pipe(gulp.dest('./'));
+});
+
+
+gulp.task('jekyll', ['css', 'js', 'img'], function(code) {
     return cp.spawn('jekyll', ['build', '--incremental'], {stdio: 'inherit'})
         .on('error', function(error) {
             gutil.log(gutil.colors.red(error.message))
         })
         .on('close', code);
 });
+
 
 gulp.task('server', function() {
     connect.server({
@@ -91,6 +110,7 @@ gulp.task('server', function() {
 gulp.task('watch', function() {
     gulp.watch(ASSETS.css, ['css']);
     gulp.watch(ASSETS.js, ['js']);
+    gulp.watch(ASSETS.img, ['img']);
     gulp.watch(ASSETS.jekyll, ['jekyll']);
 });
 
