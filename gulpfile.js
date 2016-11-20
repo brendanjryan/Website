@@ -38,7 +38,7 @@ var ASSETS = {
         '_posts/*',
         '_layouts/*',
         '_includes/*' ,
-        '_data/**/*'
+        '_data/*.yml'
     ]
 };
 
@@ -88,7 +88,9 @@ gulp.task('img', function() {
 
         // // interlace for p-jpg
         .pipe(gulpif(isProd, gm(function (gmfile) {
-          return gmfile.interlace('Line')
+          return gmfile
+            .resize(500)
+            .interlace('Line')
         })))
 
         .pipe(imageMin({
