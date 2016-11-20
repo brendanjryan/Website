@@ -1,0 +1,9 @@
+---
+layout: photo_story
+title: Etosha
+date: Fall, 2016
+cam_info: Digital
+---
+{% for photo in site.data.etosha.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}

@@ -1,0 +1,10 @@
+---
+layout: photo_story
+title: Sossusveli
+date: Fall, 2016
+cam_info: Digital
+---
+
+{% for photo in site.data.sossusveli.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}

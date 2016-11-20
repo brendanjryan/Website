@@ -30,7 +30,10 @@
   },
   "dependencies": {
     "gulp-gh-pages": "^0.5.4",
+    "gulp-gm": "0.0.8",
+    "gulp-if": "^2.0.2",
     "postcss-custom-media": "^5.0.1",
-    "postcss-scss": "^0.1.7"
+    "postcss-scss": "^0.1.7",
+    "yargs": "^6.4.0"
   }
 }

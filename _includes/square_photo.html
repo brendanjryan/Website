@@ -1,1 +1,5 @@
-<img src="{{site.url}}/assets/img/{{include.src}}" class="db w-75-ns w-100 center pv2">
+{% if include.folder_prefix %}
+    <img src="{{site.url}}/assets/img/{{include.folder_prefix}}/{{include.src}}" class="db w-75-ns w-100 center pv2">
+{% else %}
+     <img src="{{site.url}}/assets/img/{{include.src}}" class="db w-75-ns w-100 center pv2">
+ {% endif %}

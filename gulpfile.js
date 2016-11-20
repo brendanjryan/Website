@@ -12,6 +12,9 @@ var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 var customMedia = require("postcss-custom-media");
 var imageMin = require('gulp-imagemin');
+var gm = require('gulp-gm');
+var gulpif = require('gulp-if');
+var args   = require('yargs').argv;
 
 // Path Vars
 var BASE_PATH = './';
@@ -39,6 +42,7 @@ var ASSETS = {
     ]
 };
 
+var isProd = args.env === 'prod';
 
 // BUILD TASKS
 
@@ -82,14 +86,19 @@ gulp.task('img', function() {
             gulp.task('img').emit('end');
         }))
 
+        // // interlace for p-jpg
+        .pipe(gulpif(isProd, gm(function (gmfile) {
+          return gmfile.interlace('Line')
+        })))
+
         .pipe(imageMin({
             progressive: true,
             optimizationLevel: 5,
         }))
+
         .pipe(rename({dirname: DIST + '/img'}))
         .pipe(gulp.dest('./'));
 });
-
 
 gulp.task('jekyll', ['css', 'js', 'img'], function(code) {
     return cp.spawn('jekyll', ['build', '--incremental'], {stdio: 'inherit'})
@@ -98,7 +107,6 @@ gulp.task('jekyll', ['css', 'js', 'img'], function(code) {
         })
         .on('close', code);
 });
-
 
 gulp.task('server', function() {
     connect.server({
