@@ -95,7 +95,6 @@ gulp.task('img', function() {
 
         .pipe(imageMin({
             progressive: true,
-            optimizationLevel: 5,
         }))
 
         .pipe(rename({dirname: DIST + '/img'}))
