@@ -87,15 +87,18 @@ gulp.task('img', function() {
         }))
 
         // // interlace for p-jpg
-        .pipe(gulpif(isProd, gm(function (gmfile) {
+        // .pipe(gulpif(isProd,
+        .pipe(gm(function (gmfile) {
           return gmfile
-            .resize(500)
+            .resize(750)
             .interlace('Line')
-        })))
-
-        .pipe(imageMin({
-            progressive: true,
+            .quality(70)
         }))
+            // imageMin({
+            //     progressive: true,
+            // })
+
+
 
         .pipe(rename({dirname: DIST + '/img'}))
         .pipe(gulp.dest('./'));
