@@ -86,14 +86,12 @@ gulp.task('img', function() {
             gulp.task('img').emit('end');
         }))
 
-        // // interlace for p-jpg
-        // .pipe(gulpif(isProd,
-        .pipe(gm(function (gmfile) {
+        .pipe(gulpif(isProd, gm(function (gmfile) {
           return gmfile
             .resize(750)
             .interlace('Line')
             .quality(70)
-        }))
+        })))
             // imageMin({
             //     progressive: true,
             // })

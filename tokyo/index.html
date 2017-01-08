@@ -1,0 +1,10 @@
+---
+layout: photo_story
+title: Tokyo
+date: Winter, 2016
+cam_info: Digital
+---
+
+{% for photo in site.data.tokyo.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}
