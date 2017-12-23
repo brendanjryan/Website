@@ -103,7 +103,13 @@ gulp.task('img', function() {
 });
 
 gulp.task('jekyll', ['css', 'js', 'img'], function(code) {
-    return cp.spawn('jekyll', ['build', '--incremental'], {stdio: 'inherit'})
+
+    var args = ['build', '--incremental'];
+    if (!isProd) {
+      args.push('--watch')
+    }
+
+    return cp.spawn('jekyll', args, {stdio: 'inherit'})
         .on('error', function(error) {
             gutil.log(gutil.colors.red(error.message))
         })
@@ -121,7 +127,7 @@ gulp.task('watch', function() {
     gulp.watch(ASSETS.css, ['css']);
     gulp.watch(ASSETS.js, ['js']);
     gulp.watch(ASSETS.img, ['img']);
-    gulp.watch(ASSETS.jekyll, ['jekyll']);
+    // gulp.watch(ASSETS.jekyll, ['jekyll']);
 });
 
 gulp.task('deploy', ['jekyll'], function () {
