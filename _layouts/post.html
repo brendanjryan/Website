@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<article class="w-100 w-70-l" style="margin: 0 auto">
+  <section class="text">
+      <header>
+          <h3 class="f2 b ttu mb0">{{page.title}}</h3>
+          <h4 class="f5 fw3">{{ page.date | date: '%B %d, %Y' }}</h4>
+<!--           <ul class="f5 fw3 pl0">
+            {% for category in page.categories %}
+            <l1 class="link">{{category}}</l1>
+            {% endfor %}
+          </ul>
+ -->
+      </header>
+  </section>
+
+  <section class="text mt5">
+      {{content}}
+  </section>
+</article>

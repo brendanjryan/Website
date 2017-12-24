@@ -3,4 +3,12 @@ layout: default
 title: Writing
 ---
 
-<h1 class="ttu b f2 near-black mbo">coming soon</h1>
+<article>
+    <ul class="list pl0 mv5">
+      {% for post in site.posts %}
+        <l1 class="db mb5 mt2">
+          <a href="{{ post.url }}" class="f2 b ttu near-black tracked-tight mb0 dim link">{{post.title}}</a>
+        </l1>
+      {% endfor %}
+    </ul>
+</article>
