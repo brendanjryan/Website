@@ -3,11 +3,15 @@ layout: default
 title: Writing
 ---
 
+<header>
+  <h3 class="f2 b ttu mb0 lh-title">Writing</h3>
+</header>
 <article>
     <ul class="list pl0 mv5">
       {% for post in site.posts %}
         <l1 class="db mb5 mt2">
-          <a href="{{ post.url }}" class="f2 b ttu near-black tracked-tight mb0 dim link">{{post.title}}</a>
+          <a href="{{ post.url }}" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{post.title}}</a>
+           <p class="fw3">{{ post.date | date: '%B %d, %Y' }}</p>
         </l1>
       {% endfor %}
     </ul>
