@@ -43,7 +43,7 @@ func BenchmarkLogging(b *testing.B) {
 }
 ```
 
-Under the hood, the `go test` tool will the code inside of the benchmark loop until a certain time limit is reached, at which point it is simple to derive performance characteristics from the number of iterations that finished and the resource consumption of your application during that time.
+Under the hood, the `go test` tool will the execute code inside of the benchmark loop until a certain time limit is reached, at which point it is simple to derive performance characteristics from the number of iterations that finished and the resource consumption of your application during that time.
 
 In order to get the absolute tightest bound on your application's true performance, you should design your benchmark so that you have only the code you wish to measure inside the benchmark "`for`" loop. By doing any setup outside of the benchmark loop and then calling [`b.ResetTimer`](https://golang.org/pkg/testing/#B.ResetTimer) you will ensure that no allocations or cycles spent during setup will pollute your results.
 
