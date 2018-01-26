@@ -77,7 +77,7 @@ The output can be read from right to left as
 - The number of iterations the loop was run for.
 - The number of nanoseconds of system time each iteration took.
 - The number of bytes allocated per iteration.
-- The number of dintinct allocations that took place in each operation.
+- The number of distinct allocations that took place in each operation.
 
 ## Analyzing and Iterating
 
