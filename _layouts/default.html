@@ -3,10 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Brendan Ryan</title>
+  {% if page.title %}
+    <title>{{page.title}}</title>
+    <meta name="og:title" content="{{page.title}}">
+  {% else %}
+    <title>Brendan Ryan</title>
+    <meta name="og:title" content="Brendan Ryan">
+  {% endif %}
+
   <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0">
   <meta name="author" content="Brendan Ryan">
-  <meta name="description" content="Brendan Ryan - Software Engineer">
+
+  {% if page.description %}
+    <meta name="description" content="{{ page.description }}">
+    <meta name="og:description" content="{{ page.description }}">
+  {% else %}
+    <meta name="description" content="Brendan Ryan - Software Engineer">
+    <meta name="og:description" content="Brendan Ryan - Software Engineer">
+  {% endif %}
+
+  {% if page.cover_image%}
+    <meta name="og:image" content="{{site.baseurl}}/{{ page.cover_image }}">
+  {% endif %}
+
+  <meta name="twitter:site" content="@brendan_j_ryan">
+  <meta name="twitter:card" content="summary" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>

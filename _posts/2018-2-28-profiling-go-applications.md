@@ -5,10 +5,10 @@ categories: golang profiling
 medium: https://medium.com
 ---
 
-Application performance issues are, by their very nature, unexpected - and always seem to rear their heads at the worst possible time. To make matters worse, many profiling tools are cold, convoluted, and downright confusing to use - taking user experience cues from fan favorites such as `valgrind` and `gdp`. 
+Application performance issues are, by their very nature, unexpected - and always seem to rear their heads at the worst possible time. To make matters worse, many profiling tools are cold, convoluted, and downright confusing to use - taking user experience cues from fan favorites such as `valgrind` and `gdp`.
 
-`Flamegraphs`, a tool invented by linux perf guru Brendan Gegg, bring some "warmth" to the complicated process of identifying and fixing performance issues by generating an SVG visualization layer on top of a normal linux performance trace dump. In this post, we will walk though the process of profiling a basic golang web application to by using `flamegraphs` 
-  
+`Flamegraphs`, a tool invented by linux perf guru Brendan Gegg, bring some "warmth" to the complicated process of identifying and fixing performance issues by generating an SVG visualization layer on top of a normal linux performance trace dump. In this post, we will walk though the process of profiling a basic golang web application to by using `flamegraphs`
+
 **A quick aside before we begin**
 
 You should only profile and optimize your program if you *know* that you have a performance problem _before_ you begin profiling. Otherwise, premature optimization is not only a waste of your immediate time, but it will also slow you down in the future if you have to refactor your brittle and finely-tuned code.
@@ -16,7 +16,7 @@ You should only profile and optimize your program if you *know* that you have a 
 ## Our sample program
 
 We are going to be working with a small HTTP server which exposes a simple healthcheck API via `GET /ping`. For visibility, we have also included a small [`statsd`](https://www.datadoghq.com/blog/statsd/) client which records the latency of each request handled by the server. For simplicity, our code only is using the `go` stdlib but it should not seem too foreign you are used to using `gorilla/mux` or another popular library.
- 
+
 ```go
 import (
     "fmt"
@@ -110,7 +110,7 @@ func pingHandler(s *SimpleClient) http.HandlerFunc{
 
 ## Installing Profiling Tools
 
-The go stdlib comes with "batteries included" diagnosing performance issues, and there is a rich ecosystem of tools which can hook into go's simple, efficient, runtime. If you are using the default `http.DefaultServeMux` for your application, integrating `pprof` should require no more code than adding the following statement to your `import` header:  
+The go stdlib comes with "batteries included" diagnosing performance issues, and there is a rich ecosystem of tools which can hook into go's simple, efficient, runtime. If you are using the default `http.DefaultServeMux` for your application, integrating `pprof` should require no more code than adding the following statement to your `import` header:
 
 ```golang
 import (
@@ -118,7 +118,7 @@ import (
 )
 ```
 
-You can verify that you setup everything correctly by starting up the server and visiting 
+You can verify that you setup everything correctly by starting up the server and visiting
 `/debug/pprof` in any web browser. For our example application - the `pprof` interface is exposed
  at `localhost:8080/debug/pprof`.
 
@@ -132,7 +132,7 @@ To generate a `flamegraph` for our application, run the following command to gra
 
 ```bash
 # run for 30 seconds
-docker run uber/go-torch -u http://<host ip>:8080/debug/pprof -p -t=30 > torch.svg  
+docker run uber/go-torch -u http://<host ip>:8080/debug/pprof -p -t=30 > torch.svg
 ```
 
 
@@ -140,9 +140,9 @@ docker run uber/go-torch -u http://<host ip>:8080/debug/pprof -p -t=30 > torch.s
 
 If your application server is running locally, or is sitting in a staging environment, it may be difficult to replicate the scenario which is causing your performance problems in the first place. As a means of simulating a production workload, we are going to use a tiny load-testing tool called [`vegeta`](https://github.com/tsenart/vegeta) to simulate a request throughput similar to what we are seeing each of our production servers handle.
 
-`vegeta` has an incredibly powerful and configurable API for supporting various kinds of load testing and benchmarking scenarios. For our simple server and use-case, we can use the following one-liner to generate enough traffic to make things interesting. 
+`vegeta` has an incredibly powerful and configurable API for supporting various kinds of load testing and benchmarking scenarios. For our simple server and use-case, we can use the following one-liner to generate enough traffic to make things interesting.
 
-```bash 
+```bash
 # send 250rps for 60 seconds
 echo "GET http://localhost:8080/ping" | vegeta attack -rate 250 -duration=60s | vegeta report
 ```
@@ -158,10 +158,10 @@ open -a `Google Chrome` torch.svg
 ## Reading Flamegraphs
 
 Each horizontal segment in the flamegraph represents a single stack frame, with its width determined by the relative (_%_) amount of time that your program was observed to be evaluating that frame during the sampling process. These segments are organized vertically into "flames" based on their position in the call-stack, meaning that those functions further up the y-axis are called by  functions at the base of the graph - and inherently are responsible for a smaller slice of CPU-time. If you want to dive deeper into one part of the visualization you can simply click on a frame and all frames below it will disappear and the UI will resize itself.
-   
+
 ![zoom](/assets/img/flamegraphs/zoom.png)
 
-_N.B. The color of each stack frame is insignificant and is completely random - differences in 
+_N.B. The color of each stack frame is insignificant and is completely random - differences in
 tone and intensity are provided only as a means to make the diagram easier to read._
 
 Upon immediate inspection or after clicking on a few frames to narrow down your scope - it should become immediately obvious if you have a performance problem and what is it. Remember the [80/20 rule](https://en.wikipedia.org/wiki/Pareto_principle), most of you performance issues will come from a small segment of your code doing way more work than it should be - don't spend your time chasing small, thin, spikes on the flamegraph chart.
@@ -194,7 +194,7 @@ func (sc *SimpleClient) send(s string) error {
 
 ![after](/assets/img/flamegraphs/after.png)
 
-That's it! Flamegraphs are a simple and powerful tool for peeking inside your application's performance. Try generating a flamegraph of one of your applications - you may be surprised what you with what you find :) 
+That's it! Flamegraphs are a simple and powerful tool for peeking inside your application's performance. Try generating a flamegraph of one of your applications - you may be surprised what you with what you find :)
 
 ## Further Readings
 
