@@ -23,7 +23,7 @@ The core selling point of `bazel` is that, if set up correctly, your application
 
 ### Consistent UX
 
-One of the hardest parts of developing and maintaining a suite of projects spanning multiple programming languages is the constant burden of context switching between the different frameworks and toolchains. `bazel` attempts to solve this issue by providing a consistent and familiar user experience and workflow, no matter if you are building a Javascript web app or a fleet of Scala microservices. For many projects, developers can hit the group running with only two commands, `bazel build` and `bazel test`.
+One of the hardest parts of developing and maintaining a suite of projects spanning multiple programming languages is the constant burden of context switching between the different frameworks and toolchains. `bazel` attempts to solve this issue by providing a consistent and familiar user experience and workflow, no matter if you are building a Javascript web app or a fleet of Scala microservices. For many projects, developers can hit the ground running with only two commands, `bazel build` and `bazel test`.
 
 ## Setting up Bazel for Go
 
