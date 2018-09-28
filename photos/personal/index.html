@@ -1,0 +1,8 @@
+---
+layout: photo_story
+title: Personal
+---
+
+{% for photo in site.data.personal.photos %}
+    {% include square_photo.html src=photo %}
+{% endfor %}
