@@ -153,20 +153,20 @@ Running this script while also listening with the `go-torch` tool should produce
 open -a `Google Chrome` torch.svg
 ```
 
-![before](/assets/img/flamegraphs/before_box.png)
+![before](/assets/img/before_box.png)
 
 ## Reading Flamegraphs
 
 Each horizontal segment in the flamegraph represents a single stack frame, with its width determined by the relative (_%_) amount of time that your program was observed to be evaluating that frame during the sampling process. These segments are organized vertically into "flames" based on their position in the call-stack, meaning that those functions further up the y-axis are called by  functions at the base of the graph - and inherently are responsible for a smaller slice of CPU-time. If you want to dive deeper into one part of the visualization you can simply click on a frame and all frames below it will disappear and the UI will resize itself.
 
-![zoom](/assets/img/flamegraphs/zoom.png)
+![zoom](/assets/img/zoom.png)
 
 _N.B. The color of each stack frame is insignificant and is completely random - differences in
 tone and intensity are provided only as a means to make the diagram easier to read._
 
 Upon immediate inspection or after clicking on a few frames to narrow down your scope - it should become immediately obvious if you have a performance problem and what is it. Remember the [80/20 rule](https://en.wikipedia.org/wiki/Pareto_principle), most of you performance issues will come from a small segment of your code doing way more work than it should be - don't spend your time chasing small, thin, spikes on the flamegraph chart.
 
-![after](/assets/img/flamegraphs/before.png)
+![after](/assets/img/before.png)
 
 For instance, in our program we can dive into one of the larger slices and see that we are spending roughly 10% (!) of our time flushing results over a network socket in our statter! Luckily, fixing this is simple - by adding a small buffer to our code, we are able to clean up this issue and produce a new, slimmer graph.
 
@@ -192,7 +192,7 @@ func (sc *SimpleClient) send(s string) error {
 
 **New flamegraph**
 
-![after](/assets/img/flamegraphs/after.png)
+![after](/assets/img/after.png)
 
 That's it! Flamegraphs are a simple and powerful tool for peeking inside your application's performance. Try generating a flamegraph of one of your applications - you may be surprised what you with what you find :)
 

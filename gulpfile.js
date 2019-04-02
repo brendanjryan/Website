@@ -31,7 +31,8 @@ var ASSETS = {
         SRC + '/sass/**/*.scss'
     ],
     img: [
-        SRC + '/img/**/*'
+        SRC + '/img/**/*.png',
+        SRC + '/img/**/*.jpg'
     ],
     jekyll: [
         'index.html',
