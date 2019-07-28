@@ -1,5 +1,5 @@
 {
-  "name": "bjryan2.github.io",
+  "name": "brendanjryan.github.io",
   "version": "1.0.0",
   "description": "Personal Website",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bjryan2/bjryan2.github.io.git"
+    "url": "git+https://github.com/brendanjryan/brendanjryan.github.io.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bjryan2/bjryan2.github.io/issues"
+    "url": "https://github.com/brendanjryan/brendanjryan.github.io/issues"
   },
-  "homepage": "https://github.com/bjryan2/bjryan2.github.io#readme",
+  "homepage": "https://github.com/brendanjryan/brendanjryan.github.io#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
