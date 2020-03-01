@@ -1,0 +1,43 @@
+---
+---
+
+// tones
+
+$white: #ffffff;
+$light-gray: #efefef; //tertiary text color text color
+$dark-gray: #555555; // secondary text color
+$medium-black: #333333; //primary text color
+$black: #000000;
+$warm-white: #fcfcf7; // a slightly warm shade of white
+
+// colors
+$light-purple: rgba(21, 0, 162, 0.15);
+$dark-blue: #1500a2;
+
+// text colors
+
+.blue {
+  color: blue;
+}
+
+.dark-blue {
+  color: $dark-blue;
+}
+
+.light-purple {
+  color: $light-purple;
+}
+
+.bg-yellow {
+  background-color: yellow;
+}
+
+.bg-warm-white {
+  background-color: $warm-white;
+}
+
+.code-bg-yellow {
+  code {
+    background-color: yellow;
+  }
+}

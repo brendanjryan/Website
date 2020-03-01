@@ -1,0 +1,178 @@
+I"G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simple and straightforward, mostly due to the extremely powerful testing library and test runner (<code class="highlighter-rouge">go test</code>) which come bundled with the standard library. While the <a href="https://golang.org/pkg/testing/"><code class="highlighter-rouge">testing</code> </a> docs do a very good job of outlining basic applications - there are many tricks and design patterns that you can employ to make your tests even faster to write, easier to debug, and simpler to maintain. This article outlines some of these more “advanced” testing techniques and provides examples inspired by real-world use cases.</p>
+
+<h2 id="table-driven-tests-and-sub-tests">Table Driven Tests and Sub-Tests</h2>
+
+<p>Table driven tests are one of the most expressive design patterns in <code class="highlighter-rouge">golang</code>. By leveraging composite literals and anonymous <code class="highlighter-rouge">struct</code>s, table driven tests separate test inputs from their logic and allow you to modify or extend your test suite with ease.</p>
+
+<p>You can gain a little more control over the execution of your tests cases by splitting the test into multiple “sub-tests” via the <a href="https://golang.org/pkg/testing/#T.Run"><code class="highlighter-rouge">T.Run</code></a> method. For easier debugging and better reporting, each sub-test is given its own name and identifier. You can use these identifiers when running individual sub-tests via the <code class="highlighter-rouge">go test</code> tool - useful for hunting down that one failing or flaky test case. As an added bonus, you can run each scenario of a test suite in parallel -  a huge win for suites of large integration tests.</p>
+
+<p>An example of this technique is as follows:</p>
+
+<div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestfmtStatStr</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">){</span>
+	<span class="n">tests</span> <span class="o">:=</span> <span class="p">[]</span><span class="k">struct</span><span class="p">{</span>
+		<span class="n">msg</span> <span class="kt">string</span>
+		<span class="n">stat</span> <span class="kt">string</span>
+		<span class="n">tags</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span>
+		<span class="n">exp</span> <span class="kt">string</span>
+	<span class="p">}{</span>
+		<span class="p">{</span>
+			<span class="s">"empty string and tags"</span><span class="p">,</span>
+			<span class="s">""</span><span class="p">,</span>
+			<span class="no">nil</span><span class="p">,</span>
+			<span class="s">""</span><span class="p">,</span>
+		<span class="p">},</span>
+		<span class="p">{</span>
+			<span class="s">"empty tags"</span><span class="p">,</span>
+			<span class="s">"handler.latency"</span><span class="p">,</span>
+			<span class="no">nil</span><span class="p">,</span>
+			<span class="s">"foo"</span><span class="p">,</span>
+		<span class="p">},</span>
+		<span class="p">{</span>
+			<span class="s">"with tags"</span><span class="p">,</span>
+			<span class="s">"handler.latency"</span><span class="p">,</span>
+			<span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+				<span class="s">"host"</span><span class="o">:</span> <span class="s">"aws_"</span><span class="p">,</span>
+				<span class="s">"service"</span><span class="o">:</span> <span class="s">"users"</span><span class="p">,</span>
+			<span class="p">},</span>
+			<span class="s">"foo"</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">}</span>
+
+	<span class="k">for</span> <span class="n">_</span>  <span class="p">,</span> <span class="n">tt</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">tests</span> <span class="p">{</span>
+		<span class="n">tt</span> <span class="o">:=</span> <span class="n">tt</span>
+		<span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+		    <span class="n">t</span><span class="o">.</span><span class="n">Parallel</span><span class="p">()</span> <span class="c">// run sub-tests in parallel</span>
+		    <span class="n">res</span> <span class="o">:=</span> <span class="n">fmtStatStr</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">st</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span> 
+		    <span class="k">if</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span> <span class="o">!=</span> <span class="n">res</span> <span class="p">{</span>
+		        <span class="n">t</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s">"exp:"</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="s">"got:"</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+		    <span class="p">}</span>
+		<span class="p">})</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="external-test-packages">External Test Packages</h2>
+
+<p>When developing an API designed to be consumed by other engineers, it is important that you exercise the interfaces and behaviors of your package in the same ways that you anticipate your end user to. <code class="highlighter-rouge">Go</code>’s package-based file hierarchy can make it too easy to  tests for public methods alongside their private counterparts makes it hard to distinguish between the two and allows you to take shortcuts that those who vendor your library won’t be able to.</p>
+
+<p>By creating a separate <code class="highlighter-rouge">_test</code> package which sits alongside a package, you are able to separate your tests for private functionality from those for public methods and interfaces. Although this pattern is a little more work upfront and adds additional complexity to your project’s layout - it will ultimately result in friendlier more testable APIs.</p>
+
+<p>In practice, your file structure will look something like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- src
+    - client 
+        - client.go
+        - client_test.go
+    - client_test &lt;-- test package for public interfaces in 'client'
+        - client_test.go
+</code></pre></div></div>
+
+<h2 id="time-multipliers">Time Multipliers</h2>
+
+<p>Managing clocks and timeouts is one of the hardest parts of any language, and <code class="highlighter-rouge">go</code> is no exception. A popular choice is using one of  <a href="https://github.com/uber-go/ratelimit/tree/master/internal/clock">several</a> <a href="https://github.com/benbjohnson/clock">excellent</a> open source libraries which provide a “clock” interface for programmatically managing and manipulating time in tests. This tactic gives you a high degree of accuracy and control, but adds an additional API to your code and muddles your business logic with testing constructs.</p>
+
+<p>A simple way of solving this issue is by adding a “time multiplier” variable to each of your critical timeouts and intervals. By manipulating this variable, you are able to effectively control the flow of time in your tests and make them run faster or slower at will.</p>
+
+<p>The pattern is particularly useful when testing the <code class="highlighter-rouge">time.Ticker</code> object - as illustrated below:</p>
+
+<div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="p">(</span>
+	<span class="n">timeMultiplier</span> <span class="o">=</span> <span class="m">1.0</span>
+	<span class="n">batchMaxAge</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span>
+	<span class="n">batchSize</span> <span class="o">=</span> <span class="m">25</span>
+<span class="p">)</span>
+
+<span class="c">// flushEvents listens for new events on the `events` channel and sends</span>
+<span class="c">// them to the events client in batches of size `batchSize`. </span>
+<span class="k">func</span> <span class="n">flushEvents</span><span class="p">(</span><span class="n">events</span> <span class="o">&lt;-</span> <span class="k">chan</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="k">var</span> <span class="n">batch</span> <span class="p">[]</span><span class="kt">string</span>
+	<span class="k">select</span> <span class="p">{</span>
+	
+	<span class="k">case</span> <span class="n">e</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="n">events</span><span class="o">:</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">batchSize</span> <span class="p">{</span>
+			<span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"flushing batch of events"</span><span class="p">)</span>
+			<span class="n">batch</span> <span class="o">=</span> <span class="no">nil</span>
+		<span class="p">}</span>
+		
+	<span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">Tick</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">timeMultiplier</span><span class="p">)</span> <span class="o">*</span> <span class="n">batchMaxAge</span><span class="p">)</span><span class="o">:</span>
+		<span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"flushing batch of stale events"</span><span class="p">)</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="no">nil</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="embedding-types">Embedding Types</h2>
+
+<p>When testing data structures which have to manage a lot of internal state, you may find yourself adding “helper methods” or additional functionality to make your tests easier to run or debug. Instead of polluting your business logic with artifacts meant only for testing, you can instead add test-only “wrapper types” which provide additional functionality without changing the underlying interface. By keeping these types within  <code class="highlighter-rouge">_test.go</code> files you can have all the benefits of accessing private structs and methods without any of the interface bloat.</p>
+
+<p>A common use case for this pattern is “setting up” and “tearing down” datastore resources like thus:</p>
+
+<div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// User represents a user in our application.</span>
+<span class="k">type</span> <span class="n">User</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">Id</span> <span class="kt">int64</span>
+	<span class="n">FirstName</span> <span class="kt">string</span>
+	<span class="n">LastName</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c">// UserMutator defines a type which is able to mutate and persist User data. </span>
+<span class="k">type</span> <span class="n">UserMutator</span> <span class="k">interface</span> <span class="p">{</span>
+	<span class="n">Fetch</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="n">Create</span><span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="n">Update</span><span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="o">*</span><span class="n">User</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="n">Delete</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="kt">error</span>
+<span class="p">}</span>
+
+<span class="c">// UserManager handles datastore operations for 'user' data.</span>
+<span class="k">type</span> <span class="n">UserManager</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="c">// database tables, caches, etc...</span>
+<span class="p">}</span>
+
+<span class="c">// Fetch retrieves a single user model keyed by id.</span>
+<span class="k">func</span> <span class="p">(</span><span class="o">*</span><span class="n">UserManager</span><span class="p">)</span> <span class="n">Fetch</span><span class="p">(</span><span class="n">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Create instantiates a new user model</span>
+<span class="k">func</span> <span class="p">(</span><span class="o">*</span><span class="n">UserManager</span><span class="p">)</span> <span class="n">Create</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span><span class="n">User</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Update updates the user keyed by the provided id to a new state.</span>
+<span class="k">func</span> <span class="p">(</span><span class="o">*</span><span class="n">UserManager</span><span class="p">)</span> <span class="n">Update</span><span class="p">(</span><span class="n">id</span> <span class="kt">int64</span><span class="p">,</span> <span class="n">u</span> <span class="o">*</span><span class="n">User</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Delete deletes the user keyed by the provided id.</span>
+<span class="k">func</span> <span class="p">(</span><span class="o">*</span><span class="n">UserManager</span><span class="p">)</span> <span class="n">Delete</span><span class="p">(</span><span class="n">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// UserManagerCreator wraps a UserManager and provides additional</span>
+<span class="c">// functionality for setting up and tearing down this manager's underlying</span>
+<span class="c">// datastores.</span>
+<span class="k">type</span> <span class="n">UserManagerCreator</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">UserManager</span>
+<span class="p">}</span>
+
+<span class="c">// Setup instantiates resources used by this manager.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span><span class="n">UserManagerCreator</span><span class="p">)</span> <span class="n">Setup</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Teardown cleans up resources used by this manager.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span><span class="n">UserManagerCreator</span><span class="p">)</span> <span class="n">Teardown</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="further-readings">Further Readings</h2>
+
+<p>Want to learn more? Here are a few great links:</p>
+
+<ul>
+  <li><a href="https://golang.org/pkg/testing/"><code class="highlighter-rouge">testing</code> package documentation</a></li>
+  <li><a href="https://talks.golang.org/2014/testing.slide">Testing Techniques - Andrew Gerrand</a></li>
+  <li><a href="https://dave.cheney.net/2013/06/09/writing-table-driven-tests-in-go">Writing table driven tests</a></li>
+</ul>
+:ET
