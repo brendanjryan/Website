@@ -7,3 +7,5 @@ plugins:
 
 imageoptim:
   svgo: false
+
+destination: ./build
