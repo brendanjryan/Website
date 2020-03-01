@@ -1,11 +1,9 @@
 name: Brendan Ryan
 
-exclude: [
-  "_dev",
-  "Gemfile",
-  "Gemfile.lock",
-  "gulpfile.js",
-  "node_modules",
-  "package.json"
-]
+exclude: ["_dev", "Gemfile", "Gemfile.lock", "_compress_images_cache.yml"]
 
+plugins:
+  - jekyll-compress-images
+
+imageoptim:
+  svgo: false
