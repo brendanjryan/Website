@@ -1,6 +1,8 @@
 ---
 layout: post
-title:  "Application Tuning in go: Benchmarks"
+title: "Application Tuning in go: Benchmarks"
+# categories: golang profiling
+tags: golang profiling
 medium: https://medium.com
 ---
 
@@ -148,7 +150,6 @@ PASS
 ```
 
 At first glance our code immediately looks a lot better! Not only is our code faster (lower ns/op), but we are also doing fewer allocations per operation. Not too bad for a few minutes of work!
-
 
 #### Aside:
 

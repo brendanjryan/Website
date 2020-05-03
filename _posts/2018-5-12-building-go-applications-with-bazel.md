@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Building Go Applications with Bazel"
-categories: golang bazel
+title: "Building Go Applications with Bazel"
+tags: golang bazel
+redirect_from: /golang/bazel/2018/05/12/building-go-applications-with-bazel
 medium: https://medium.com
 ---
 
@@ -95,6 +96,7 @@ After this brief setup, invoking `gazelle` is simple straightforward - just `"ru
 ```bash
 $ bazel run //:gazelle
 ```
+
 {:.code-bg-yellow}
 
 That's it! You should now see `BUILD` files in each package of your project. Take a few minutes to check these out and bask in the power of `gazelle`.
@@ -109,7 +111,7 @@ INFO: Analysed 2 targets (3 packages loaded).
 INFO: Found 2 targets...
 INFO: Elapsed time: 0.628s, Critical Path: 0.04s
 INFO: Build completed successfully, 1 total action
-````
+```
 
 **N.B. In `bazel`'s vernacular `//` denotes the "root" of your project and `...` denotes all "child" packages of the specified package. For example, the command `bazel build //lr/...` will build the `lru` package and all sub-packages underneath it.**
 
@@ -233,6 +235,7 @@ In our case, pushing our image up to `Dockerhub` is as simple as:
 ```bash
 $ bazel run //example:push
 ```
+
 {:.code-bg-yellow}
 
 _Caveat: I do not recommend pushing images from your local workstation. This step should be part of your CI workflow_.
@@ -247,7 +250,7 @@ Feel free to reach out on [Twitter](https://twitter.com/Brendan_J_Ryan) or [Gith
 
 Want to learn more? Here are a few great links:
 
-* [Official `Bazel` documentation](https://golang.org/pkg/testing/)
-* [`Bazel` rules for `go`](https://github.com/bazelbuild/rules_go)
-* [`bazel-gazelle` - used for generating BUILD files](https://github.com/bazelbuild/bazel-gazelle)
-* [Golang UK - Building `Go` with `Bazel`](https://www.youtube.com/watch?v=2TKxuERTnks)
+- [Official `Bazel` documentation](https://golang.org/pkg/testing/)
+- [`Bazel` rules for `go`](https://github.com/bazelbuild/rules_go)
+- [`bazel-gazelle` - used for generating BUILD files](https://github.com/bazelbuild/bazel-gazelle)
+- [Golang UK - Building `Go` with `Bazel`](https://www.youtube.com/watch?v=2TKxuERTnks)

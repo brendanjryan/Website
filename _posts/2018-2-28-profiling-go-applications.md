@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Profiling Go Applications with Flamegraphs"
-categories: golang profiling
+tags: golang profiling
+redirect_from: /golang/profiling/2018/02/28/profiling-go-applications
 medium: https://medium.com
 ---
 

@@ -4,6 +4,7 @@ exclude: ["_dev", "Gemfile", "Gemfile.lock", "_compress_images_cache.yml"]
 
 plugins:
   - jekyll-compress-images
+  - jekyll-redirect-from
 
 imageoptim:
   svgo: false
