@@ -182,13 +182,13 @@ docker run uber/go-torch <span class="nt">-u</span> http://&lt;host ip&gt;:8080/
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>open <span class="nt">-a</span> <span class="sb">`</span>Google Chrome<span class="sb">`</span> torch.svg
 </code></pre></div></div>
 
-<p><img src="/assets/img/before_box.png" alt="before" /></p>
+<p><img src="http://localhost:4000/assets/img/before_box.png" alt="before" /></p>
 
 <h2 id="reading-flamegraphs">Reading Flamegraphs</h2>
 
 <p>Each horizontal segment in the flamegraph represents a single stack frame, with its width determined by the relative (<em>%</em>) amount of time that your program was observed to be evaluating that frame during the sampling process. These segments are organized vertically into “flames” based on their position in the call-stack, meaning that those functions further up the y-axis are called by functions at the base of the graph - and inherently are responsible for a smaller slice of CPU-time. If you want to dive deeper into one part of the visualization you can simply click on a frame and all frames below it will disappear and the UI will resize itself.</p>
 
-<p><img src="/assets/img/zoom.png" alt="zoom" /></p>
+<p><img src="http://localhost:4000/assets/img/zoom.png" alt="zoom" /></p>
 
 <p><em>N.B. The color of each stack frame is insignificant and is completely random - differences in
 tone and intensity are provided only as a means to make the diagram easier to read.</em></p>

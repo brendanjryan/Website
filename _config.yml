@@ -1,6 +1,13 @@
 name: Brendan Ryan
 
-exclude: ["_dev", "Gemfile", "Gemfile.lock", "_compress_images_cache.yml"]
+url: https://brendanjryan.com
+
+exclude:
+  - "Gemfile"
+  - "Gemfile.lock"
+  - "_compress_images_cache.yml"
+  - "Makefile"
+  - README.md
 
 plugins:
   - jekyll-compress-images
