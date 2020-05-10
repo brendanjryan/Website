@@ -1,0 +1,195 @@
+I"�Y<p>Application performance issues are, by their very nature, unexpected - and always seem to rear their heads at the worst possible time. To make matters worse, many profiling tools are cold, convoluted, and downright confusing to use - taking user experience cues from fan favorites such as <code class="highlighter-rouge">valgrind</code> and <code class="highlighter-rouge">gdp</code>.</p>
+
+<p><code class="highlighter-rouge">Flamegraphs</code>, a tool invented by linux perf guru Brendan Gegg, bring some “warmth” to the complicated process of identifying and fixing performance issues by generating an SVG visualization layer on top of a normal linux performance trace dump. In this post, we will walk though the process of profiling a basic golang web application to by using <code class="highlighter-rouge">flamegraphs</code></p>
+
+<p><strong>A quick aside before we begin</strong></p>
+
+<p>You should only profile and optimize your program if you <em>know</em> that you have a performance problem <em>before</em> you begin profiling. Otherwise, premature optimization is not only a waste of your immediate time, but it will also slow you down in the future if you have to refactor your brittle and finely-tuned code.</p>
+
+<h2 id="our-sample-program">Our sample program</h2>
+
+<p>We are going to be working with a small HTTP server which exposes a simple healthcheck API via <code class="highlighter-rouge">GET /ping</code>. For visibility, we have also included a small <a href="https://www.datadoghq.com/blog/statsd/"><code class="highlighter-rouge">statsd</code></a> client which records the latency of each request handled by the server. For simplicity, our code only is using the <code class="highlighter-rouge">go</code> stdlib but it should not seem too foreign you are used to using <code class="highlighter-rouge">gorilla/mux</code> or another popular library.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"net"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="c">// SimpleClient is a thin statsd client.</span>
+<span class="k">type</span> <span class="n">SimpleClient</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">c</span> <span class="n">net</span><span class="o">.</span><span class="n">PacketConn</span>
+    <span class="n">ra</span> <span class="o">*</span><span class="n">net</span><span class="o">.</span><span class="n">UDPAddr</span>
+<span class="p">}</span>
+
+<span class="c">// NewSimpleClient instantiates a new SimpleClient instance which binds</span>
+<span class="c">// to the provided UDP address.</span>
+<span class="k">func</span> <span class="n">NewSimpleClient</span><span class="p">(</span><span class="n">addr</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">SimpleClient</span><span class="p">,</span> <span class="kt">error</span><span class="p">){</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">ListenPacket</span><span class="p">(</span><span class="s">"udp"</span><span class="p">,</span> <span class="s">":0"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">ra</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">ResolveUDPAddr</span><span class="p">(</span><span class="s">"udp"</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">SimpleClient</span><span class="p">{</span>
+        <span class="n">c</span><span class="o">:</span>  <span class="n">c</span><span class="p">,</span>
+        <span class="n">ra</span><span class="o">:</span> <span class="n">ra</span><span class="p">,</span>
+    <span class="p">},</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Timing sends a statsd timing call.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">sc</span> <span class="o">*</span><span class="n">SimpleClient</span><span class="p">)</span> <span class="n">Timing</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">,</span> <span class="n">d</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">,</span> <span class="n">sampleRate</span> <span class="kt">float64</span><span class="p">,</span>
+    <span class="n">tags</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">fmtStatStr</span><span class="p">(</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s:%d|ms"</span><span class="p">,</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="o">/</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">),</span> <span class="n">tags</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">sc</span> <span class="o">*</span><span class="n">SimpleClient</span><span class="p">)</span> <span class="n">send</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">sc</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">net</span><span class="o">.</span><span class="n">UDPConn</span><span class="p">)</span><span class="o">.</span><span class="n">WriteToUDP</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">sc</span><span class="o">.</span><span class="n">ra</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span>  <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">fmtStatStr</span><span class="p">(</span><span class="n">stat</span> <span class="kt">string</span><span class="p">,</span> <span class="n">tags</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="n">parts</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">tags</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s">""</span> <span class="p">{</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s:%s"</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s|%s"</span><span class="p">,</span> <span class="n">stat</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="s">","</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">stats</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">NewSimpleClient</span><span class="p">(</span><span class="s">"localhost:6060"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"could not start stas client: "</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// add handlers to default mux</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/ping"</span><span class="p">,</span> <span class="n">pingHandler</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span>
+
+    <span class="n">s</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Server</span><span class="p">{</span>
+        <span class="n">Addr</span><span class="o">:</span>    <span class="s">":8080"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">pingHandler</span><span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">SimpleClient</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">{</span>
+    <span class="k">return</span> <span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">st</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">Timing</span><span class="p">(</span><span class="s">"http.ping"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">st</span><span class="p">),</span> <span class="m">1.0</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+        <span class="p">}()</span>
+
+        <span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="m">200</span><span class="p">)</span>
+    <span class="p">}}</span>
+</code></pre></div></div>
+
+<h2 id="installing-profiling-tools">Installing Profiling Tools</h2>
+
+<p>The go stdlib comes with “batteries included” diagnosing performance issues, and there is a rich ecosystem of tools which can hook into go’s simple, efficient, runtime. If you are using the default <code class="highlighter-rouge">http.DefaultServeMux</code> for your application, integrating <code class="highlighter-rouge">pprof</code> should require no more code than adding the following statement to your <code class="highlighter-rouge">import</code> header:</p>
+
+<div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">(</span>
+  <span class="n">_</span> <span class="s">"net/http/pprof"</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>You can verify that you setup everything correctly by starting up the server and visiting
+<code class="highlighter-rouge">/debug/pprof</code> in any web browser. For our example application - the <code class="highlighter-rouge">pprof</code> interface is exposed
+at <code class="highlighter-rouge">localhost:8080/debug/pprof</code>.</p>
+
+<h2 id="generating-a-flamegraph">Generating a Flamegraph</h2>
+
+<p>The <code class="highlighter-rouge">flamegraph</code> tool works by taking an existing stack trace file from your system and parsing it to produce a SVG visualization. To make one of these elusive stack trace files, we can use the <a href="https://github.com/google/pprof"><code class="highlighter-rouge">pprof</code></a> tool which ships with your <code class="highlighter-rouge">go</code> installation. To tie things together and save us the pain of installing and configuring any more software, we will use the excellent <a href="https://github.com/uber/go-torch"><code class="highlighter-rouge">uber/go-torch</code></a> library – which provides an convenient containerized workflow for this entire process.</p>
+
+<p>Flamegraphs can be generated from a variety of profiles, each targeting a different performance attribute. You can use the same toolbox and methodolgy to hunt down CPU bottlenecks, memory leaks, and even deadlocked processes.</p>
+
+<p>To generate a <code class="highlighter-rouge">flamegraph</code> for our application, run the following command to grab the <code class="highlighter-rouge">uber/go-torch</code> container and point it at your application.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># run for 30 seconds</span>
+docker run uber/go-torch <span class="nt">-u</span> http://&lt;host ip&gt;:8080/debug/pprof <span class="nt">-p</span> <span class="nt">-t</span><span class="o">=</span>30 <span class="o">&gt;</span> torch.svg
+</code></pre></div></div>
+
+<h3 id="generating-request-load">Generating Request Load</h3>
+
+<p>If your application server is running locally, or is sitting in a staging environment, it may be difficult to replicate the scenario which is causing your performance problems in the first place. As a means of simulating a production workload, we are going to use a tiny load-testing tool called <a href="https://github.com/tsenart/vegeta"><code class="highlighter-rouge">vegeta</code></a> to simulate a request throughput similar to what we are seeing each of our production servers handle.</p>
+
+<p><code class="highlighter-rouge">vegeta</code> has an incredibly powerful and configurable API for supporting various kinds of load testing and benchmarking scenarios. For our simple server and use-case, we can use the following one-liner to generate enough traffic to make things interesting.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># send 250rps for 60 seconds</span>
+<span class="nb">echo</span> <span class="s2">"GET http://localhost:8080/ping"</span> | vegeta attack <span class="nt">-rate</span> 250 <span class="nt">-duration</span><span class="o">=</span>60s | vegeta report
+</code></pre></div></div>
+
+<p>Running this script while also listening with the <code class="highlighter-rouge">go-torch</code> tool should produce a file called <code class="highlighter-rouge">torch.svg</code>. Open this file up in Chrome and you should be greeted by a nice flamegraph of your program!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>open <span class="nt">-a</span> <span class="sb">`</span>Google Chrome<span class="sb">`</span> torch.svg
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/img/before_box.png" alt="before" /></p>
+
+<h2 id="reading-flamegraphs">Reading Flamegraphs</h2>
+
+<p>Each horizontal segment in the flamegraph represents a single stack frame, with its width determined by the relative (<em>%</em>) amount of time that your program was observed to be evaluating that frame during the sampling process. These segments are organized vertically into “flames” based on their position in the call-stack, meaning that those functions further up the y-axis are called by functions at the base of the graph - and inherently are responsible for a smaller slice of CPU-time. If you want to dive deeper into one part of the visualization you can simply click on a frame and all frames below it will disappear and the UI will resize itself.</p>
+
+<p><img src="http://localhost:4000/assets/img/zoom.png" alt="zoom" /></p>
+
+<p><em>N.B. The color of each stack frame is insignificant and is completely random - differences in
+tone and intensity are provided only as a means to make the diagram easier to read.</em></p>
+
+<p>Upon immediate inspection or after clicking on a few frames to narrow down your scope - it should become immediately obvious if you have a performance problem and what is it. Remember the <a href="https://en.wikipedia.org/wiki/Pareto_principle">80/20 rule</a>, most of you performance issues will come from a small segment of your code doing way more work than it should be - don’t spend your time chasing small, thin, spikes on the flamegraph chart.</p>
+
+<p><img src="/assets/img/before.png" alt="after" /></p>
+
+<p>For instance, in our program we can dive into one of the larger slices and see that we are spending roughly 10% (!) of our time flushing results over a network socket in our statter! Luckily, fixing this is simple - by adding a small buffer to our code, we are able to clean up this issue and produce a new, slimmer graph.</p>
+
+<p><strong>Code Change</strong></p>
+
+<div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">sc</span> <span class="o">*</span><span class="n">SimpleClient</span><span class="p">)</span> <span class="n">send</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">bufferCapacity</span> <span class="p">{</span>
+
+        <span class="n">b</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="s">","</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">sc</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">net</span><span class="o">.</span><span class="n">UDPConn</span><span class="p">)</span><span class="o">.</span><span class="n">WriteToUDP</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">sc</span><span class="o">.</span><span class="n">ra</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+
+        <span class="n">sc</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="no">nil</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span>  <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>New flamegraph</strong></p>
+
+<p><img src="/assets/img/after.png" alt="after" /></p>
+
+<p>That’s it! Flamegraphs are a simple and powerful tool for peeking inside your application’s performance. Try generating a flamegraph of one of your applications - you may be surprised what you with what you find :)</p>
+
+<h2 id="further-readings">Further Readings</h2>
+
+<p>Want to learn more? Here are a few great links:</p>
+
+<ul>
+  <li><a href="http://www.brendangregg.com/flamegraphs.html">Flamegraphs - Brendan Gegg</a></li>
+  <li><a href="https://queue.acm.org/detail.cfm?id=2927301">The Flame Graph - ACMQ</a></li>
+  <li><a href="https://www.facebook.com/notes/facebook-engineering/the-mature-optimization-handbook/10151784131623920/">The Mature Optimization Handbook</a></li>
+  <li><a href="https://www.youtube.com/watch?v=N3PWzBeLX2M">Profiling and Optimizing <code class="highlighter-rouge">go</code> Applications</a></li>
+</ul>
+:ET
