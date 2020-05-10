@@ -192,7 +192,7 @@ func (sc *SimpleClient) send(s string) error {
 
 **New flamegraph**
 
-![after]({{ "/assets/img/after.png" | base_url}})
+![after]({{ "/assets/img/after.png" | relative_url}})
 
 That's it! Flamegraphs are a simple and powerful tool for peeking inside your application's performance. Try generating a flamegraph of one of your applications - you may be surprised what you with what you find :)
 

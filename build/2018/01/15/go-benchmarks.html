@@ -40,11 +40,11 @@
   </section>
 
   <section class="text mt5 lh-copy">
-      <p>One of the best parts about writing and maintaining software with <code class="highlighter-rouge">go</code> is that it comes with “batteries included” for developing scalable applications. Beyond just verifying the correctness of your code using go’s <code class="highlighter-rouge">testing</code> package, you can just as easily measure and track the <em>performance</em> of your code, using more or less the same paradigms and constructs. To illustrate the power and simplicity of benchmarks, this post walks through an example, real-world, tuning scenario.</p>
+      <p>One of the best parts about writing and maintaining software with <code class="language-plaintext highlighter-rouge">go</code> is that it comes with “batteries included” for developing scalable applications. Beyond just verifying the correctness of your code using go’s <code class="language-plaintext highlighter-rouge">testing</code> package, you can just as easily measure and track the <em>performance</em> of your code, using more or less the same paradigms and constructs. To illustrate the power and simplicity of benchmarks, this post walks through an example, real-world, tuning scenario.</p>
 
 <h2 id="our-sample-program">Our sample program</h2>
 
-<p>For our exercise we will be tuning the performance of a <a href="https://github.com/etsy/statsd"><code class="highlighter-rouge">statsd</code></a> client that our hypothetical web server relies on. Our server calls out to this client multiple times when serving each request, making it a very “hot” region of code. By using <a href="https://golang.org/pkg/runtime/pprof/"><code class="highlighter-rouge">pprof</code></a>, we have identified that we are spending a <strong>lot</strong> of CPU time in one function - a small utility for adding tags to a stat string as per the <a href="https://docs.datadoghq.com/developers/dogstatsd/">DogStatsD</a> spec.</p>
+<p>For our exercise we will be tuning the performance of a <a href="https://github.com/etsy/statsd"><code class="language-plaintext highlighter-rouge">statsd</code></a> client that our hypothetical web server relies on. Our server calls out to this client multiple times when serving each request, making it a very “hot” region of code. By using <a href="https://golang.org/pkg/runtime/pprof/"><code class="language-plaintext highlighter-rouge">pprof</code></a>, we have identified that we are spending a <strong>lot</strong> of CPU time in one function - a small utility for adding tags to a stat string as per the <a href="https://docs.datadoghq.com/developers/dogstatsd/">DogStatsD</a> spec.</p>
 
 <div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// fmtStatString takes a preformatted statting string and appends</span>
 <span class="c">// a flattened map of tags to it.</span>
@@ -62,7 +62,7 @@
 
 <h2 id="writing-a-benchmark">Writing A Benchmark</h2>
 
-<p>The process of writing benchmarks should be very familiar to those who have written a functional test in <code class="highlighter-rouge">go</code> before. The key difference is a different parameter to your testing function - <code class="highlighter-rouge">*testing.B</code> instead of <code class="highlighter-rouge">*testing.T</code>, as well as the inclusion of a small looping construct in the body of your test.</p>
+<p>The process of writing benchmarks should be very familiar to those who have written a functional test in <code class="language-plaintext highlighter-rouge">go</code> before. The key difference is a different parameter to your testing function - <code class="language-plaintext highlighter-rouge">*testing.B</code> instead of <code class="language-plaintext highlighter-rouge">*testing.T</code>, as well as the inclusion of a small looping construct in the body of your test.</p>
 
 <p>Most benchmarks ultimately end up resembling this pattern:</p>
 
@@ -77,11 +77,11 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Under the hood, the <code class="highlighter-rouge">go test</code> tool will the execute code inside of the benchmark loop until a certain time limit is reached, at which point it is simple to derive performance characteristics from the number of iterations that finished and the resource consumption of your application during that time.</p>
+<p>Under the hood, the <code class="language-plaintext highlighter-rouge">go test</code> tool will the execute code inside of the benchmark loop until a certain time limit is reached, at which point it is simple to derive performance characteristics from the number of iterations that finished and the resource consumption of your application during that time.</p>
 
-<p>In order to get the absolute tightest bound on your application’s true performance, you should design your benchmark so that you have only the code you wish to measure inside the benchmark “<code class="highlighter-rouge">for</code>” loop. By doing any setup outside of the benchmark loop and then calling <a href="https://golang.org/pkg/testing/#B.ResetTimer"><code class="highlighter-rouge">b.ResetTimer</code></a> you will ensure that no allocations or cycles spent during setup will pollute your results.</p>
+<p>In order to get the absolute tightest bound on your application’s true performance, you should design your benchmark so that you have only the code you wish to measure inside the benchmark “<code class="language-plaintext highlighter-rouge">for</code>” loop. By doing any setup outside of the benchmark loop and then calling <a href="https://golang.org/pkg/testing/#B.ResetTimer"><code class="language-plaintext highlighter-rouge">b.ResetTimer</code></a> you will ensure that no allocations or cycles spent during setup will pollute your results.</p>
 
-<p>For our <code class="highlighter-rouge">fmtStatStr</code> function, we don’t need a lot of prep-work and can write a straightforward benchmark:</p>
+<p>For our <code class="language-plaintext highlighter-rouge">fmtStatStr</code> function, we don’t need a lot of prep-work and can write a straightforward benchmark:</p>
 
 <div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">BenchmarkLogging</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">B</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
@@ -92,7 +92,7 @@
 
 <h2 id="running-your-benchmark">Running your benchmark</h2>
 
-<p>You can run your benchmarks via the <code class="highlighter-rouge">go test</code> tool simply by adding a few flags, like so:</p>
+<p>You can run your benchmarks via the <code class="language-plaintext highlighter-rouge">go test</code> tool simply by adding a few flags, like so:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-memprofile</span> <span class="nt">-bench</span><span class="o">=</span><span class="nb">.</span>
 </code></pre></div></div>
@@ -114,9 +114,9 @@
 
 <h2 id="analyzing-and-iterating">Analyzing and Iterating</h2>
 
-<p>Now that we have a good baseline of our program’s performance, we can begin refactoring our code to see how much work we can shave off. There is no single process or magical remedy for all performance issues, but a few quick Google searches and a dive into the relevant <code class="highlighter-rouge">go</code> docs is probably a good place to start.</p>
+<p>Now that we have a good baseline of our program’s performance, we can begin refactoring our code to see how much work we can shave off. There is no single process or magical remedy for all performance issues, but a few quick Google searches and a dive into the relevant <code class="language-plaintext highlighter-rouge">go</code> docs is probably a good place to start.</p>
 
-<p>After a little research we discovered that using <code class="highlighter-rouge">fmt.Printf</code> to concatenate and join strings is a fairly CPU and memory intensive process and that using a <a href="https://golang.org/pkg/bytes/#NewBufferString"><code class="highlighter-rouge">bytes.Buffer</code></a> is much more efficient means of achieving the same result. Armed with this knowledge we refactor our function to look like this:</p>
+<p>After a little research we discovered that using <code class="language-plaintext highlighter-rouge">fmt.Printf</code> to concatenate and join strings is a fairly CPU and memory intensive process and that using a <a href="https://golang.org/pkg/bytes/#NewBufferString"><code class="language-plaintext highlighter-rouge">bytes.Buffer</code></a> is much more efficient means of achieving the same result. Armed with this knowledge we refactor our function to look like this:</p>
 
 <div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">fmtStatStrOpt</span><span class="p">(</span><span class="n">stat</span> <span class="kt">string</span><span class="p">,</span> <span class="n">tags</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
   <span class="n">b</span> <span class="o">:=</span> <span class="n">bytes</span><span class="o">.</span><span class="n">NewBufferString</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
@@ -203,7 +203,7 @@ PASS
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Since <code class="highlighter-rouge">concat</code> is a <em>very</em> short function and its return value isn’t captured at its callsite, the <code class="highlighter-rouge">go</code> compiler may happily remove this function call for you - turning your benchmark into a really lame game of for-loop musical chairs. To save yourself from this benign mistake you can trick the compiler into thinking your code is more important than it really is by capturing return values in various scopes - like so:</p>
+<p>Since <code class="language-plaintext highlighter-rouge">concat</code> is a <em>very</em> short function and its return value isn’t captured at its callsite, the <code class="language-plaintext highlighter-rouge">go</code> compiler may happily remove this function call for you - turning your benchmark into a really lame game of for-loop musical chairs. To save yourself from this benign mistake you can trick the compiler into thinking your code is more important than it really is by capturing return values in various scopes - like so:</p>
 
 <div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// package level scope</span>
 <span class="k">var</span> <span class="n">concatRes</span> <span class="kt">string</span>
@@ -237,7 +237,7 @@ PASS
 <p>Want to learn more? Here are a few great links:</p>
 
 <ul>
-  <li><a href="https://golang.org/pkg/testing/#hdr-Benchmarks"><code class="highlighter-rouge">testing</code> package documentation</a></li>
+  <li><a href="https://golang.org/pkg/testing/#hdr-Benchmarks"><code class="language-plaintext highlighter-rouge">testing</code> package documentation</a></li>
   <li><a href="https://blog.golang.org/subtests">subtests and subbenchmarks (go blog)</a></li>
   <li><a href="https://github.com/golang/benchmarks">go language benchmarks</a></li>
 </ul>
