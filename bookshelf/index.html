@@ -1,0 +1,24 @@
+---
+layout: default
+title: Bookshelf 
+---
+
+{% assign public_books = site.data.books | where_exp:"item", "item.Bookshelves contains 'public'" %}
+
+<header>
+  <h3 class="f2 b ttu mb0 lh-title">Bookshelf</h3>
+</header>
+<article>
+    <ul class="list pl0 mv5">
+      {% for book in public_books %}
+        <l1 class="db mv4">
+          {% if book["ISBN"] %}
+            <a href="https://www.google.com/search?tbo=p&tbm=bks&q=isbn:{{book["ISBN"]}}" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a>
+          {% else %}
+            <a href="#" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a>
+          {% endif %}
+          <p class="fw3">{{book["Author"]}}</p>
+        </l1>
+      {% endfor %}
+    </ul>
+</article>
