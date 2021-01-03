@@ -3,19 +3,21 @@ layout: default
 title: Bookshelf 
 ---
 
-{% assign public_books = site.data.books | where_exp:"item", "item.Bookshelves contains 'public'" %}
+{% assign public_books = site.data.books | where_exp:"item", "item.Bookshelves contains 'public'" | shuffle %}
 
 <header>
   <h3 class="f2 b ttu mb0 lh-title">Bookshelf</h3>
+  <p class="fw4 near-black"> An incomplete, and somewhat edited, collection of books I have read throughout the years. </p>
 </header>
 <article>
     <ul class="list pl0 mv5">
       {% for book in public_books %}
         <l1 class="db mv4">
-          {% if book["ISBN"] %}
-            <a href="https://www.google.com/search?tbo=p&tbm=bks&q=isbn:{{book["ISBN"]}}" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a>
+        {% assign isbn = book['ISBN'] |split: "=" | last %}
+          {% if isbn !="" %}
+            <a href="https://isbnsearch.org/isbn/{{isbn | strip | escape}}" class="f4 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a>
           {% else %}
-            <a href="#" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a>
+            <!-- <a href="#" class="f3 b ttu near-black tracked-tight mb0 dim link lh-title">{{book["Title"]}}</a> -->
           {% endif %}
           <p class="fw3">{{book["Author"]}}</p>
         </l1>
