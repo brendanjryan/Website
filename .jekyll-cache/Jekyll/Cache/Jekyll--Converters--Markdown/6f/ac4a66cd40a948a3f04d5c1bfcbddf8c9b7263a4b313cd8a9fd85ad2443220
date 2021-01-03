@@ -1,11 +1,10 @@
-I"
-G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simple and straightforward, mostly due to the extremely powerful testing library and test runner (<code class="highlighter-rouge">go test</code>) which come bundled with the standard library. While the <a href="https://golang.org/pkg/testing/"><code class="highlighter-rouge">testing</code> </a> docs do a very good job of outlining basic applications - there are many tricks and design patterns that you can employ to make your tests even faster to write, easier to debug, and simpler to maintain. This article outlines some of these more “advanced” testing techniques and provides examples inspired by real-world use cases.</p>
+I"H<p>Writing tests in <code class="language-plaintext highlighter-rouge">go</code> is extremely simple and straightforward, mostly due to the extremely powerful testing library and test runner (<code class="language-plaintext highlighter-rouge">go test</code>) which come bundled with the standard library. While the <a href="https://golang.org/pkg/testing/"><code class="language-plaintext highlighter-rouge">testing</code> </a> docs do a very good job of outlining basic applications - there are many tricks and design patterns that you can employ to make your tests even faster to write, easier to debug, and simpler to maintain. This article outlines some of these more “advanced” testing techniques and provides examples inspired by real-world use cases.</p>
 
 <h2 id="table-driven-tests-and-sub-tests">Table Driven Tests and Sub-Tests</h2>
 
-<p>Table driven tests are one of the most expressive design patterns in <code class="highlighter-rouge">golang</code>. By leveraging composite literals and anonymous <code class="highlighter-rouge">struct</code>s, table driven tests separate test inputs from their logic and allow you to modify or extend your test suite with ease.</p>
+<p>Table driven tests are one of the most expressive design patterns in <code class="language-plaintext highlighter-rouge">golang</code>. By leveraging composite literals and anonymous <code class="language-plaintext highlighter-rouge">struct</code>s, table driven tests separate test inputs from their logic and allow you to modify or extend your test suite with ease.</p>
 
-<p>You can gain a little more control over the execution of your tests cases by splitting the test into multiple “sub-tests” via the <a href="https://golang.org/pkg/testing/#T.Run"><code class="highlighter-rouge">T.Run</code></a> method. For easier debugging and better reporting, each sub-test is given its own name and identifier. You can use these identifiers when running individual sub-tests via the <code class="highlighter-rouge">go test</code> tool - useful for hunting down that one failing or flaky test case. As an added bonus, you can run each scenario of a test suite in parallel - a huge win for suites of large integration tests.</p>
+<p>You can gain a little more control over the execution of your tests cases by splitting the test into multiple “sub-tests” via the <a href="https://golang.org/pkg/testing/#T.Run"><code class="language-plaintext highlighter-rouge">T.Run</code></a> method. For easier debugging and better reporting, each sub-test is given its own name and identifier. You can use these identifiers when running individual sub-tests via the <code class="language-plaintext highlighter-rouge">go test</code> tool - useful for hunting down that one failing or flaky test case. As an added bonus, you can run each scenario of a test suite in parallel - a huge win for suites of large integration tests.</p>
 
 <p>An example of this technique is as follows:</p>
 
@@ -54,13 +53,13 @@ G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simp
 
 <h2 id="external-test-packages">External Test Packages</h2>
 
-<p>When developing an API designed to be consumed by other engineers, it is important that you exercise the interfaces and behaviors of your package in the same ways that you anticipate your end user to. <code class="highlighter-rouge">Go</code>’s package-based file hierarchy can make it too easy to tests for public methods alongside their private counterparts makes it hard to distinguish between the two and allows you to take shortcuts that those who vendor your library won’t be able to.</p>
+<p>When developing an API designed to be consumed by other engineers, it is important that you exercise the interfaces and behaviors of your package in the same ways that you anticipate your end user to. <code class="language-plaintext highlighter-rouge">Go</code>’s package-based file hierarchy can make it too easy to tests for public methods alongside their private counterparts makes it hard to distinguish between the two and allows you to take shortcuts that those who vendor your library won’t be able to.</p>
 
-<p>By creating a separate <code class="highlighter-rouge">_test</code> package which sits alongside a package, you are able to separate your tests for private functionality from those for public methods and interfaces. Although this pattern is a little more work upfront and adds additional complexity to your project’s layout - it will ultimately result in friendlier more testable APIs.</p>
+<p>By creating a separate <code class="language-plaintext highlighter-rouge">_test</code> package which sits alongside a package, you are able to separate your tests for private functionality from those for public methods and interfaces. Although this pattern is a little more work upfront and adds additional complexity to your project’s layout - it will ultimately result in friendlier more testable APIs.</p>
 
 <p>In practice, your file structure will look something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- src
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- src
     - client
         - client.go
         - client_test.go
@@ -70,11 +69,11 @@ G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simp
 
 <h2 id="time-multipliers">Time Multipliers</h2>
 
-<p>Managing clocks and timeouts is one of the hardest parts of any language, and <code class="highlighter-rouge">go</code> is no exception. A popular choice is using one of <a href="https://github.com/uber-go/ratelimit/tree/master/internal/clock">several</a> <a href="https://github.com/benbjohnson/clock">excellent</a> open source libraries which provide a “clock” interface for programmatically managing and manipulating time in tests. This tactic gives you a high degree of accuracy and control, but adds an additional API to your code and muddles your business logic with testing constructs.</p>
+<p>Managing clocks and timeouts is one of the hardest parts of any language, and <code class="language-plaintext highlighter-rouge">go</code> is no exception. A popular choice is using one of <a href="https://github.com/uber-go/ratelimit/tree/master/internal/clock">several</a> <a href="https://github.com/benbjohnson/clock">excellent</a> open source libraries which provide a “clock” interface for programmatically managing and manipulating time in tests. This tactic gives you a high degree of accuracy and control, but adds an additional API to your code and muddles your business logic with testing constructs.</p>
 
 <p>A simple way of solving this issue is by adding a “time multiplier” variable to each of your critical timeouts and intervals. By manipulating this variable, you are able to effectively control the flow of time in your tests and make them run faster or slower at will.</p>
 
-<p>The pattern is particularly useful when testing the <code class="highlighter-rouge">time.Ticker</code> object - as illustrated below:</p>
+<p>The pattern is particularly useful when testing the <code class="language-plaintext highlighter-rouge">time.Ticker</code> object - as illustrated below:</p>
 
 <div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="p">(</span>
 	<span class="n">timeMultiplier</span> <span class="o">=</span> <span class="m">1.0</span>
@@ -106,7 +105,7 @@ G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simp
 
 <h2 id="embedding-types">Embedding Types</h2>
 
-<p>When testing data structures which have to manage a lot of internal state, you may find yourself adding “helper methods” or additional functionality to make your tests easier to run or debug. Instead of polluting your business logic with artifacts meant only for testing, you can instead add test-only “wrapper types” which provide additional functionality without changing the underlying interface. By keeping these types within <code class="highlighter-rouge">_test.go</code> files you can have all the benefits of accessing private structs and methods without any of the interface bloat.</p>
+<p>When testing data structures which have to manage a lot of internal state, you may find yourself adding “helper methods” or additional functionality to make your tests easier to run or debug. Instead of polluting your business logic with artifacts meant only for testing, you can instead add test-only “wrapper types” which provide additional functionality without changing the underlying interface. By keeping these types within <code class="language-plaintext highlighter-rouge">_test.go</code> files you can have all the benefits of accessing private structs and methods without any of the interface bloat.</p>
 
 <p>A common use case for this pattern is “setting up” and “tearing down” datastore resources like thus:</p>
 
@@ -173,7 +172,7 @@ G<p>Writing tests in <code class="highlighter-rouge">go</code> is extremely simp
 <p>Want to learn more? Here are a few great links:</p>
 
 <ul>
-  <li><a href="https://golang.org/pkg/testing/"><code class="highlighter-rouge">testing</code> package documentation</a></li>
+  <li><a href="https://golang.org/pkg/testing/"><code class="language-plaintext highlighter-rouge">testing</code> package documentation</a></li>
   <li><a href="https://talks.golang.org/2014/testing.slide">Testing Techniques - Andrew Gerrand</a></li>
   <li><a href="https://dave.cheney.net/2013/06/09/writing-table-driven-tests-in-go">Writing table driven tests</a></li>
 </ul>

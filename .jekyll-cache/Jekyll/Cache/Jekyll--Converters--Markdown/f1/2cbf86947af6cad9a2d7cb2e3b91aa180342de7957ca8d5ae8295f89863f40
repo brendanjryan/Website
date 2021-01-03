@@ -1,28 +1,28 @@
-I"(W<p>Let’s admit it - managing dependencies and building binaries is quite possibly the most frustrating and least fulfilling part of software development. To make matters worse, these frustrations only compound as your application grows - resulting in a hornet’s nest of bash scripts and fatalist debug instructions like “just clean the entire project and re-download all dependencies.”</p>
+I"�\<p>Let’s admit it - managing dependencies and building binaries is quite possibly the most frustrating and least fulfilling part of software development. To make matters worse, these frustrations only compound as your application grows - resulting in a hornet’s nest of bash scripts and fatalist debug instructions like “just clean the entire project and re-download all dependencies.”</p>
 
-<p>In the last few years, a variety of tools which aim to break down this complexity have been developed and open sourced. Facebook’s <a href="https://github.com/facebook/buck"><code class="highlighter-rouge">buck</code></a> and Foursquare’s <a href="https://www.pantsbuild.org/"><code class="highlighter-rouge">pants</code></a> are two popular derivatives of Google’s internal <code class="highlighter-rouge">blaze</code> build tool, components of which have been open sourced under the <a href="https://bazel.build/"><code class="highlighter-rouge">bazel</code></a> project. These tools require a pretty hefty upfront investment to get setup, but will quickly pay dividends time and time over again as your builds are faster, easier to debug, and consistent across operating systems and architectures.</p>
+<p>In the last few years, a variety of tools which aim to break down this complexity have been developed and open sourced. Facebook’s <a href="https://github.com/facebook/buck"><code class="language-plaintext highlighter-rouge">buck</code></a> and Foursquare’s <a href="https://www.pantsbuild.org/"><code class="language-plaintext highlighter-rouge">pants</code></a> are two popular derivatives of Google’s internal <code class="language-plaintext highlighter-rouge">blaze</code> build tool, components of which have been open sourced under the <a href="https://bazel.build/"><code class="language-plaintext highlighter-rouge">bazel</code></a> project. These tools require a pretty hefty upfront investment to get setup, but will quickly pay dividends time and time over again as your builds are faster, easier to debug, and consistent across operating systems and architectures.</p>
 
-<p>This post presents <code class="highlighter-rouge">bazel</code> as a viable alternative to the native <code class="highlighter-rouge">go</code> toolchains and walks through the process of setting up and using <code class="highlighter-rouge">bazel</code> to build a real-world application.</p>
+<p>This post presents <code class="language-plaintext highlighter-rouge">bazel</code> as a viable alternative to the native <code class="language-plaintext highlighter-rouge">go</code> toolchains and walks through the process of setting up and using <code class="language-plaintext highlighter-rouge">bazel</code> to build a real-world application.</p>
 
-<h2 id="the-benefits-of-bazel">The Benefits of <code class="highlighter-rouge">Bazel</code></h2>
+<h2 id="the-benefits-of-bazel">The Benefits of <code class="language-plaintext highlighter-rouge">Bazel</code></h2>
 
 <h3 id="fast-and-reproducible-builds">Fast and Reproducible Builds</h3>
 
-<p>The core selling point of <code class="highlighter-rouge">bazel</code> is that, if set up correctly, your application’s build process is guaranteed to be completely reproducible and consistent - meaning no more afternoons wasted trying to figure out why the code you wrote behaves differently in CI / your boss’s laptop / prod (!). On top of this ambitious promise, <code class="highlighter-rouge">bazel</code> also takes strides to make your builds faster, spreading work across all of your machine’s processing power, and ensuring that only the necessary files are rebuilt between runs.</p>
+<p>The core selling point of <code class="language-plaintext highlighter-rouge">bazel</code> is that, if set up correctly, your application’s build process is guaranteed to be completely reproducible and consistent - meaning no more afternoons wasted trying to figure out why the code you wrote behaves differently in CI / your boss’s laptop / prod (!). On top of this ambitious promise, <code class="language-plaintext highlighter-rouge">bazel</code> also takes strides to make your builds faster, spreading work across all of your machine’s processing power, and ensuring that only the necessary files are rebuilt between runs.</p>
 
 <h3 id="language-agnostic-extensible-tooling">Language Agnostic, Extensible Tooling</h3>
 
-<p><code class="highlighter-rouge">bazel</code> can be used for more than just <code class="highlighter-rouge">go</code> projects, and is configured via the powerful <a href="https://docs.bazel.build/versions/master/skylark/language.html"><code class="highlighter-rouge">skylark</code></a> language, a breath of fresh air for accustomed to hacking together bespoke <code class="highlighter-rouge">bash</code> scripts for every repository. Beyond just being able to build code, <code class="highlighter-rouge">bazel</code> can also be used to manage more complex workflows, such as <a href="https://github.com/bazelbuild/rules_docker">building and pushing docker containers</a> and even <a href="https://github.com/bazelbuild/rules_webtesting">integration tests</a>.</p>
+<p><code class="language-plaintext highlighter-rouge">bazel</code> can be used for more than just <code class="language-plaintext highlighter-rouge">go</code> projects, and is configured via the powerful <a href="https://docs.bazel.build/versions/master/skylark/language.html"><code class="language-plaintext highlighter-rouge">skylark</code></a> language, a breath of fresh air for accustomed to hacking together bespoke <code class="language-plaintext highlighter-rouge">bash</code> scripts for every repository. Beyond just being able to build code, <code class="language-plaintext highlighter-rouge">bazel</code> can also be used to manage more complex workflows, such as <a href="https://github.com/bazelbuild/rules_docker">building and pushing docker containers</a> and even <a href="https://github.com/bazelbuild/rules_webtesting">integration tests</a>.</p>
 
 <h3 id="consistent-ux">Consistent UX</h3>
 
-<p>One of the hardest parts of developing and maintaining a suite of projects spanning multiple programming languages is the constant burden of context switching between the different frameworks and toolchains. <code class="highlighter-rouge">bazel</code> attempts to solve this issue by providing a consistent and familiar user experience and workflow, no matter if you are building a Javascript web app or a fleet of Scala microservices. For many projects, developers can hit the ground running with only two commands, <code class="highlighter-rouge">bazel build</code> and <code class="highlighter-rouge">bazel test</code>.</p>
+<p>One of the hardest parts of developing and maintaining a suite of projects spanning multiple programming languages is the constant burden of context switching between the different frameworks and toolchains. <code class="language-plaintext highlighter-rouge">bazel</code> attempts to solve this issue by providing a consistent and familiar user experience and workflow, no matter if you are building a Javascript web app or a fleet of Scala microservices. For many projects, developers can hit the ground running with only two commands, <code class="language-plaintext highlighter-rouge">bazel build</code> and <code class="language-plaintext highlighter-rouge">bazel test</code>.</p>
 
 <h2 id="setting-up-bazel-for-go">Setting up Bazel for Go</h2>
 
-<p>This post details setting up <code class="highlighter-rouge">bazel</code> for the popular <a href="github.com/golang/groupcache"><code class="highlighter-rouge">groupcache</code></a> project. If you want to follow along or reference this project later, you can check out the code on <a href="https://github.com/brendanjryan/groupcache-bazel">github</a>.</p>
+<p>This post details setting up <code class="language-plaintext highlighter-rouge">bazel</code> for the popular <a href="github.com/golang/groupcache"><code class="language-plaintext highlighter-rouge">groupcache</code></a> project. If you want to follow along or reference this project later, you can check out the code on <a href="https://github.com/brendanjryan/groupcache-bazel">github</a>.</p>
 
-<p>The first step to setting up a <code class="highlighter-rouge">bazel</code> repo is creating what is known as a <code class="highlighter-rouge">WORKSPACE</code> file. This file contains a manifest of all of you external dependencies and <code class="highlighter-rouge">bazel</code> libraries. Our project will build the <code class="highlighter-rouge">groupcache</code> binary and then package it into a Docker container for other developers to use. As such, our <code class="highlighter-rouge">WORKSPACE</code> file will look something like this:</p>
+<p>The first step to setting up a <code class="language-plaintext highlighter-rouge">bazel</code> repo is creating what is known as a <code class="language-plaintext highlighter-rouge">WORKSPACE</code> file. This file contains a manifest of all of you external dependencies and <code class="language-plaintext highlighter-rouge">bazel</code> libraries. Our project will build the <code class="language-plaintext highlighter-rouge">groupcache</code> binary and then package it into a Docker container for other developers to use. As such, our <code class="language-plaintext highlighter-rouge">WORKSPACE</code> file will look something like this:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># download go bazel tools
 </span><span class="n">http_archive</span><span class="p">(</span>
@@ -62,15 +62,15 @@
 <span class="p">)</span>
 </code></pre></div></div>
 
-<p>The syntax of this file should be very familiar with those who have written <code class="highlighter-rouge">python</code> before - the <code class="highlighter-rouge">skylark</code> language is essentially a pared down version of the <code class="highlighter-rouge">python</code> language.</p>
+<p>The syntax of this file should be very familiar with those who have written <code class="language-plaintext highlighter-rouge">python</code> before - the <code class="language-plaintext highlighter-rouge">skylark</code> language is essentially a pared down version of the <code class="language-plaintext highlighter-rouge">python</code> language.</p>
 
-<p>In addition to creating a <code class="highlighter-rouge">WORKSPACE</code> file, each directory or “package” in a <code class="highlighter-rouge">bazel</code> project needs to have a <code class="highlighter-rouge">BUILD.bazel</code> file. These files declare how to build and test each package, along with any dependencies and additional tasks.</p>
+<p>In addition to creating a <code class="language-plaintext highlighter-rouge">WORKSPACE</code> file, each directory or “package” in a <code class="language-plaintext highlighter-rouge">bazel</code> project needs to have a <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> file. These files declare how to build and test each package, along with any dependencies and additional tasks.</p>
 
-<p><code class="highlighter-rouge">BUILD</code> files are the lifeblood of <code class="highlighter-rouge">bazel</code> - but they are also a huge pain to initially write and then keep up to date as dependencies change - especially for <code class="highlighter-rouge">go</code> programmers who are used to just declaring <code class="highlighter-rouge">import ()</code> blocks and having the compiler figure out all of the semantics for you. Luckily, the <code class="highlighter-rouge">bazel</code> team has recognized this pain point and has written a nifty tool called <code class="highlighter-rouge">gazelle</code> which can completely automate this process for you! For the sake of brevity (and sanity), the rest of this walkthrough will use the <code class="highlighter-rouge">gazelle</code> tool, something which I strongly recommend you adopt in your own projects as well.</p>
+<p><code class="language-plaintext highlighter-rouge">BUILD</code> files are the lifeblood of <code class="language-plaintext highlighter-rouge">bazel</code> - but they are also a huge pain to initially write and then keep up to date as dependencies change - especially for <code class="language-plaintext highlighter-rouge">go</code> programmers who are used to just declaring <code class="language-plaintext highlighter-rouge">import ()</code> blocks and having the compiler figure out all of the semantics for you. Luckily, the <code class="language-plaintext highlighter-rouge">bazel</code> team has recognized this pain point and has written a nifty tool called <code class="language-plaintext highlighter-rouge">gazelle</code> which can completely automate this process for you! For the sake of brevity (and sanity), the rest of this walkthrough will use the <code class="language-plaintext highlighter-rouge">gazelle</code> tool, something which I strongly recommend you adopt in your own projects as well.</p>
 
-<h2 id="scaffolding-dependencies-with-gazelle">Scaffolding Dependencies with <code class="highlighter-rouge">gazelle</code></h2>
+<h2 id="scaffolding-dependencies-with-gazelle">Scaffolding Dependencies with <code class="language-plaintext highlighter-rouge">gazelle</code></h2>
 
-<p>To use <code class="highlighter-rouge">gazelle</code> and generate <code class="highlighter-rouge">BUILD</code> files for your project you must first create <code class="highlighter-rouge">BUILD.bazel</code> file in the root of your repo and configure the <code class="highlighter-rouge">gazelle</code> tool.</p>
+<p>To use <code class="language-plaintext highlighter-rouge">gazelle</code> and generate <code class="language-plaintext highlighter-rouge">BUILD</code> files for your project you must first create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> file in the root of your repo and configure the <code class="language-plaintext highlighter-rouge">gazelle</code> tool.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">load</span><span class="p">(</span><span class="s">"@bazel_gazelle//:def.bzl"</span><span class="p">,</span> <span class="s">"gazelle"</span><span class="p">)</span>
 
@@ -81,16 +81,16 @@
 <span class="p">)</span>
 </code></pre></div></div>
 
-<p>After this brief setup, invoking <code class="highlighter-rouge">gazelle</code> is simple straightforward - just <code class="highlighter-rouge">"run"</code> the job via <code class="highlighter-rouge">bazel</code>.</p>
+<p>After this brief setup, invoking <code class="language-plaintext highlighter-rouge">gazelle</code> is simple straightforward - just <code class="language-plaintext highlighter-rouge">"run"</code> the job via <code class="language-plaintext highlighter-rouge">bazel</code>.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bazel run //:gazelle
 </code></pre></div></div>
 
-<p class="code-bg-yellow">That’s it! You should now see <code class="highlighter-rouge">BUILD</code> files in each package of your project. Take a few minutes to check these out and bask in the power of <code class="highlighter-rouge">gazelle</code>.</p>
+<p class="code-bg-yellow">That’s it! You should now see <code class="language-plaintext highlighter-rouge">BUILD</code> files in each package of your project. Take a few minutes to check these out and bask in the power of <code class="language-plaintext highlighter-rouge">gazelle</code>.</p>
 
 <h2 id="building-your-application">Building your application</h2>
 
-<p>Now that we have set up our <code class="highlighter-rouge">BUILD</code> files, the process of building our application is extremely straightforward. By running commands of the form <code class="highlighter-rouge">bazel build &lt;target&gt;</code>, you can build any package or target declared in your project.</p>
+<p>Now that we have set up our <code class="language-plaintext highlighter-rouge">BUILD</code> files, the process of building our application is extremely straightforward. By running commands of the form <code class="language-plaintext highlighter-rouge">bazel build &lt;target&gt;</code>, you can build any package or target declared in your project.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bazel build //lru/...
 INFO: Analysed 2 targets <span class="o">(</span>3 packages loaded<span class="o">)</span><span class="nb">.</span>
@@ -99,7 +99,7 @@ INFO: Elapsed <span class="nb">time</span>: 0.628s, Critical Path: 0.04s
 INFO: Build completed successfully, 1 total action
 </code></pre></div></div>
 
-<p><strong>N.B. In <code class="highlighter-rouge">bazel</code>’s vernacular <code class="highlighter-rouge">//</code> denotes the “root” of your project and <code class="highlighter-rouge">...</code> denotes all “child” packages of the specified package. For example, the command <code class="highlighter-rouge">bazel build //lr/...</code> will build the <code class="highlighter-rouge">lru</code> package and all sub-packages underneath it.</strong></p>
+<p><strong>N.B. In <code class="language-plaintext highlighter-rouge">bazel</code>’s vernacular <code class="language-plaintext highlighter-rouge">//</code> denotes the “root” of your project and <code class="language-plaintext highlighter-rouge">...</code> denotes all “child” packages of the specified package. For example, the command <code class="language-plaintext highlighter-rouge">bazel build //lr/...</code> will build the <code class="language-plaintext highlighter-rouge">lru</code> package and all sub-packages underneath it.</strong></p>
 
 <p>Note that subsequent builds of the same target should be significantly faster:</p>
 
@@ -110,7 +110,7 @@ INFO: Elapsed <span class="nb">time</span>: 0.268s, Critical Path: 0.01s
 INFO: Build completed successfully, 1 total action
 </code></pre></div></div>
 
-<p>If you want to build the <em>entire</em> project, you can run the following command - note the <em>significant</em> speedups gained from using <code class="highlighter-rouge">bazel</code>.</p>
+<p>If you want to build the <em>entire</em> project, you can run the following command - note the <em>significant</em> speedups gained from using <code class="language-plaintext highlighter-rouge">bazel</code>.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bazel build //...
 INFO: Analysed 19 targets <span class="o">(</span>64 packages loaded<span class="o">)</span><span class="nb">.</span>
@@ -128,9 +128,9 @@ INFO: Build completed successfully, 1 total action
 
 <h2 id="testing-your-applications">Testing your applications</h2>
 
-<p>Under the hood <code class="highlighter-rouge">bazel</code> runs tests using the same <code class="highlighter-rouge">go test</code> tools that you should be familiar with but exposes them under the same <code class="highlighter-rouge">bazel &lt;command&gt; &lt;taget&gt;</code> pattern used by the <code class="highlighter-rouge">build</code> process.</p>
+<p>Under the hood <code class="language-plaintext highlighter-rouge">bazel</code> runs tests using the same <code class="language-plaintext highlighter-rouge">go test</code> tools that you should be familiar with but exposes them under the same <code class="language-plaintext highlighter-rouge">bazel &lt;command&gt; &lt;taget&gt;</code> pattern used by the <code class="language-plaintext highlighter-rouge">build</code> process.</p>
 
-<p>For example, to test the <code class="highlighter-rouge">consistenthash</code> package you would run:</p>
+<p>For example, to test the <code class="language-plaintext highlighter-rouge">consistenthash</code> package you would run:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bazel <span class="nb">test</span> //consistenthash/...
 INFO: Analysed 2 targets <span class="o">(</span>0 packages loaded<span class="o">)</span><span class="nb">.</span>
@@ -152,7 +152,7 @@ INFO: Build completed successfully, 4 total actions
 Executed 4 out of 4 tests: 4 tests pass.
 </code></pre></div></div>
 
-<p>Note that we get the same benefits of cached results as we do with <code class="highlighter-rouge">bazel build</code></p>
+<p>Note that we get the same benefits of cached results as we do with <code class="language-plaintext highlighter-rouge">bazel build</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bazel <span class="nb">test</span> //...
 INFO: Analysed 19 targets <span class="o">(</span>0 packages loaded<span class="o">)</span><span class="nb">.</span>
@@ -163,7 +163,7 @@ INFO: Build completed successfully, 1 total action
 Executed 0 out of 4 tests: 4 tests pass.
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">bazel</code> testrunner also provides additional functionality on top of <code class="highlighter-rouge">go test</code> - for instance you can pass the <code class="highlighter-rouge">--runs-per-test</code> flag to run your suite multiple times in parallel – very useful for catching flaky tests and data races between test runs.</p>
+<p>The <code class="language-plaintext highlighter-rouge">bazel</code> testrunner also provides additional functionality on top of <code class="language-plaintext highlighter-rouge">go test</code> - for instance you can pass the <code class="language-plaintext highlighter-rouge">--runs-per-test</code> flag to run your suite multiple times in parallel – very useful for catching flaky tests and data races between test runs.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bazel <span class="nb">test</span> <span class="nt">--runs_per_test</span><span class="o">=</span>10 //...
 INFO: Analysed 19 targets <span class="o">(</span>0 packages loaded<span class="o">)</span><span class="nb">.</span>
@@ -176,7 +176,7 @@ Executed 4 out of 4 tests: 4 tests pass.
 
 <h2 id="packaging-your-application">Packaging your application</h2>
 
-<p>Now that we’ve gotten our project building with <code class="highlighter-rouge">bazel</code> - publishing the final binary as a <code class="highlighter-rouge">docker</code> container is surprisingly little work. To do so, we just declare each of the layers of the final image and then how and where the image will be published, like so:</p>
+<p>Now that we’ve gotten our project building with <code class="language-plaintext highlighter-rouge">bazel</code> - publishing the final binary as a <code class="language-plaintext highlighter-rouge">docker</code> container is surprisingly little work. To do so, we just declare each of the layers of the final image and then how and where the image will be published, like so:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># load bazel rules for docker images
 </span><span class="n">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_docker//go:image.bzl"</span><span class="p">,</span> <span class="s">"go_image"</span><span class="p">)</span>
@@ -207,9 +207,9 @@ Executed 4 out of 4 tests: 4 tests pass.
 </span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>One of the strengths of this process over the standard docker workflow is that no <code class="highlighter-rouge">Dockerfiles</code> are required and you can easily build and publish multiple images to multiple repositories - all in parallel!</p>
+<p>One of the strengths of this process over the standard docker workflow is that no <code class="language-plaintext highlighter-rouge">Dockerfiles</code> are required and you can easily build and publish multiple images to multiple repositories - all in parallel!</p>
 
-<p>In our case, pushing our image up to <code class="highlighter-rouge">Dockerhub</code> is as simple as:</p>
+<p>In our case, pushing our image up to <code class="language-plaintext highlighter-rouge">Dockerhub</code> is as simple as:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bazel run //example:push
 </code></pre></div></div>
@@ -218,7 +218,7 @@ Executed 4 out of 4 tests: 4 tests pass.
 
 <h2 id="final-words">Final Words</h2>
 
-<p>Hopefully this walkthrough gives you enough to start integrating <code class="highlighter-rouge">bazel</code> into one of your own <code class="highlighter-rouge">go</code> projects - or conversely know that you never want to :)</p>
+<p>Hopefully this walkthrough gives you enough to start integrating <code class="language-plaintext highlighter-rouge">bazel</code> into one of your own <code class="language-plaintext highlighter-rouge">go</code> projects - or conversely know that you never want to :)</p>
 
 <p>Feel free to reach out on <a href="https://twitter.com/Brendan_J_Ryan">Twitter</a> or <a href="https://github.com/brendanjryan/groupcache-bazel">Github</a> if you have any questions!</p>
 
@@ -227,9 +227,9 @@ Executed 4 out of 4 tests: 4 tests pass.
 <p>Want to learn more? Here are a few great links:</p>
 
 <ul>
-  <li><a href="https://golang.org/pkg/testing/">Official <code class="highlighter-rouge">Bazel</code> documentation</a></li>
-  <li><a href="https://github.com/bazelbuild/rules_go"><code class="highlighter-rouge">Bazel</code> rules for <code class="highlighter-rouge">go</code></a></li>
-  <li><a href="https://github.com/bazelbuild/bazel-gazelle"><code class="highlighter-rouge">bazel-gazelle</code> - used for generating BUILD files</a></li>
-  <li><a href="https://www.youtube.com/watch?v=2TKxuERTnks">Golang UK - Building <code class="highlighter-rouge">Go</code> with <code class="highlighter-rouge">Bazel</code></a></li>
+  <li><a href="https://golang.org/pkg/testing/">Official <code class="language-plaintext highlighter-rouge">Bazel</code> documentation</a></li>
+  <li><a href="https://github.com/bazelbuild/rules_go"><code class="language-plaintext highlighter-rouge">Bazel</code> rules for <code class="language-plaintext highlighter-rouge">go</code></a></li>
+  <li><a href="https://github.com/bazelbuild/bazel-gazelle"><code class="language-plaintext highlighter-rouge">bazel-gazelle</code> - used for generating BUILD files</a></li>
+  <li><a href="https://www.youtube.com/watch?v=2TKxuERTnks">Golang UK - Building <code class="language-plaintext highlighter-rouge">Go</code> with <code class="language-plaintext highlighter-rouge">Bazel</code></a></li>
 </ul>
 :ET

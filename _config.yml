@@ -15,3 +15,7 @@ plugins:
 
 imageoptim:
   svgo: false
+
+gdrive:
+  sheet: "website books"
+  cache_period: 5 minutes
