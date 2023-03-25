@@ -67,37 +67,37 @@
 <p>The first step to setting up a <code class="language-plaintext highlighter-rouge">bazel</code> repo is creating what is known as a <code class="language-plaintext highlighter-rouge">WORKSPACE</code> file. This file contains a manifest of all of you external dependencies and <code class="language-plaintext highlighter-rouge">bazel</code> libraries. Our project will build the <code class="language-plaintext highlighter-rouge">groupcache</code> binary and then package it into a Docker container for other developers to use. As such, our <code class="language-plaintext highlighter-rouge">WORKSPACE</code> file will look something like this:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># download go bazel tools
-</span><span class="n">http_archive</span><span class="p">(</span>
+</span><span class="nf">http_archive</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"io_bazel_rules_go"</span><span class="p">,</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s">"https://github.com/bazelbuild/rules_go/releases/download/0.11.0/rules_go-0.11.0.tar.gz"</span><span class="p">,</span>
     <span class="n">sha256</span> <span class="o">=</span> <span class="s">"f70c35a8c779bb92f7521ecb5a1c6604e9c3edd431e50b6376d7497abc8ad3c1"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="c1"># download the gazelle tool
-</span><span class="n">http_archive</span><span class="p">(</span>
+</span><span class="nf">http_archive</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"bazel_gazelle"</span><span class="p">,</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s">"https://github.com/bazelbuild/bazel-gazelle/releases/download/0.11.0/bazel-gazelle-0.11.0.tar.gz"</span><span class="p">,</span>
     <span class="n">sha256</span> <span class="o">=</span> <span class="s">"92a3c59734dad2ef85dc731dbcb2bc23c4568cded79d4b87ebccd787eb89e8d0"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># load go rules
-</span><span class="n">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_go//go:def.bzl"</span><span class="p">,</span> <span class="s">"go_rules_dependencies"</span><span class="p">,</span> <span class="s">"go_register_toolchains"</span><span class="p">,</span> <span class="s">"go_repository"</span><span class="p">)</span>
-<span class="n">go_rules_dependencies</span><span class="p">()</span>
-<span class="n">go_register_toolchains</span><span class="p">()</span>
+</span><span class="nf">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_go//go:def.bzl"</span><span class="p">,</span> <span class="s">"go_rules_dependencies"</span><span class="p">,</span> <span class="s">"go_register_toolchains"</span><span class="p">,</span> <span class="s">"go_repository"</span><span class="p">)</span>
+<span class="nf">go_rules_dependencies</span><span class="p">()</span>
+<span class="nf">go_register_toolchains</span><span class="p">()</span>
 
 <span class="c1"># load gazelle
-</span><span class="n">load</span><span class="p">(</span><span class="s">"@bazel_gazelle//:deps.bzl"</span><span class="p">,</span> <span class="s">"gazelle_dependencies"</span><span class="p">)</span>
-<span class="n">gazelle_dependencies</span><span class="p">()</span>
+</span><span class="nf">load</span><span class="p">(</span><span class="s">"@bazel_gazelle//:deps.bzl"</span><span class="p">,</span> <span class="s">"gazelle_dependencies"</span><span class="p">)</span>
+<span class="nf">gazelle_dependencies</span><span class="p">()</span>
 
 <span class="c1"># load go docker rules
-</span><span class="n">load</span><span class="p">(</span>
+</span><span class="nf">load</span><span class="p">(</span>
     <span class="s">"@io_bazel_rules_docker//go:image.bzl"</span><span class="p">,</span>
     <span class="n">_go_image_repos</span> <span class="o">=</span> <span class="s">"repositories"</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">_go_image_repos</span><span class="p">()</span>
+<span class="nf">_go_image_repos</span><span class="p">()</span>
 
 <span class="c1"># external dependencies
 </span>
-<span class="n">go_repository</span><span class="p">(</span>
+<span class="nf">go_repository</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"com_github_golang_protobuf"</span><span class="p">,</span>
     <span class="n">importpath</span> <span class="o">=</span> <span class="s">"github.com/golang/protobuf"</span><span class="p">,</span>
     <span class="n">tag</span> <span class="o">=</span> <span class="s">"v1.0.0"</span><span class="p">,</span>
@@ -114,9 +114,9 @@
 
 <p>To use <code class="language-plaintext highlighter-rouge">gazelle</code> and generate <code class="language-plaintext highlighter-rouge">BUILD</code> files for your project you must first create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> file in the root of your repo and configure the <code class="language-plaintext highlighter-rouge">gazelle</code> tool.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">load</span><span class="p">(</span><span class="s">"@bazel_gazelle//:def.bzl"</span><span class="p">,</span> <span class="s">"gazelle"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">load</span><span class="p">(</span><span class="s">"@bazel_gazelle//:def.bzl"</span><span class="p">,</span> <span class="s">"gazelle"</span><span class="p">)</span>
 
-<span class="n">gazelle</span><span class="p">(</span>
+<span class="nf">gazelle</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"gazelle"</span><span class="p">,</span>
     <span class="c1"># you project name here!
 </span>    <span class="n">prefix</span> <span class="o">=</span> <span class="s">"github.com/brendanjryan/groupcache-bazel"</span><span class="p">,</span>
@@ -221,25 +221,25 @@ Executed 4 out of 4 tests: 4 tests pass.
 <p>Now that we’ve gotten our project building with <code class="language-plaintext highlighter-rouge">bazel</code> - publishing the final binary as a <code class="language-plaintext highlighter-rouge">docker</code> container is surprisingly little work. To do so, we just declare each of the layers of the final image and then how and where the image will be published, like so:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># load bazel rules for docker images
-</span><span class="n">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_docker//go:image.bzl"</span><span class="p">,</span> <span class="s">"go_image"</span><span class="p">)</span>
-<span class="n">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_docker//container:container.bzl"</span><span class="p">,</span> <span class="s">"container_push"</span><span class="p">,</span> <span class="s">"container_image"</span><span class="p">)</span>
+</span><span class="nf">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_docker//go:image.bzl"</span><span class="p">,</span> <span class="s">"go_image"</span><span class="p">)</span>
+<span class="nf">load</span><span class="p">(</span><span class="s">"@io_bazel_rules_docker//container:container.bzl"</span><span class="p">,</span> <span class="s">"container_push"</span><span class="p">,</span> <span class="s">"container_image"</span><span class="p">)</span>
 
 <span class="c1"># declare the base `go` image - this is the same format as the standard
 # `go_binary` rule.
-</span><span class="n">go_image</span><span class="p">(</span>
+</span><span class="nf">go_image</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"groupcache_image_base"</span><span class="p">,</span>
     <span class="n">embed</span> <span class="o">=</span> <span class="p">[</span><span class="s">":go_default_library"</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># wrapper image used to expose ports to the underlying go_image
-</span><span class="n">container_image</span><span class="p">(</span>
+</span><span class="nf">container_image</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"groupcache_image"</span><span class="p">,</span>
     <span class="n">base</span> <span class="o">=</span> <span class="s">":groupcache_image_base"</span><span class="p">,</span>
     <span class="n">ports</span> <span class="o">=</span> <span class="p">[</span><span class="s">"8080"</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># declare where and how the image will be published
-</span><span class="n">container_push</span><span class="p">(</span>
+</span><span class="nf">container_push</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">"push"</span><span class="p">,</span>
     <span class="nb">format</span> <span class="o">=</span> <span class="s">"Docker"</span><span class="p">,</span>
     <span class="n">image</span> <span class="o">=</span> <span class="s">":groupcache_image"</span><span class="p">,</span>
