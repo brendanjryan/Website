@@ -10,7 +10,6 @@ exclude:
   - README.md
 
 plugins:
-  - jekyll-compress-images
   - jekyll-redirect-from
 
 imageoptim:
