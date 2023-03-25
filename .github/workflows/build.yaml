@@ -1,17 +1,15 @@
-name: Build and Deploy to Github Pages
+name: Build
 
 on:
+  pull_request:
   push:
-    branches:
-      - master 
-      - main
+  workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: actions/cache@v3
         with:
           path: vendor/bundle
@@ -21,3 +19,4 @@ jobs:
       - uses:  helaili/jekyll-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          build_only: true
