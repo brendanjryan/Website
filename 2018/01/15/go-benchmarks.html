@@ -22,25 +22,36 @@
   <meta name="twitter:card" content="summary" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://brendanjryan.com/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
-</head>
-<body class="w-100 helvetica">
-  <article class="content ma5-ns ma3 mb7">
-    <article class="w-100 w-70-l" style="margin: 0 auto">
-  <section class="text">
-      <header>
-          <h3 class="f2 b mb0 lh-title">Application Tuning in go: Benchmarks</h3>
-          <h4 class="f5 fw5 lh-title">
-            January 15, 2018
-          </h4>
-      </header>
-  </section>
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+    }
 
-  <section class="text mt5 lh-copy">
-      <p>One of the best parts about writing and maintaining software with <code class="language-plaintext highlighter-rouge">go</code> is that it comes with “batteries included” for developing scalable applications. Beyond just verifying the correctness of your code using go’s <code class="language-plaintext highlighter-rouge">testing</code> package, you can just as easily measure and track the <em>performance</em> of your code, using more or less the same paradigms and constructs. To illustrate the power and simplicity of benchmarks, this post walks through an example, real-world, tuning scenario.</p>
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: blue !important;
+    }
+  </style>
+
+</head>
+<body class="tc">
+  <main class="mw7 center ph3 ph4-ns pv4">
+    <article class="tl mw8 center">
+  <header class="tc mb5">
+    <h1 class="f3 fw4 mb2">Application Tuning in go: Benchmarks</h1>
+    <time class="f7 gray">January 15, 2018</time>
+  </header>
+
+  <section class="lh-copy f6">
+    <p>One of the best parts about writing and maintaining software with <code class="language-plaintext highlighter-rouge">go</code> is that it comes with “batteries included” for developing scalable applications. Beyond just verifying the correctness of your code using go’s <code class="language-plaintext highlighter-rouge">testing</code> package, you can just as easily measure and track the <em>performance</em> of your code, using more or less the same paradigms and constructs. To illustrate the power and simplicity of benchmarks, this post walks through an example, real-world, tuning scenario.</p>
 
 <h2 id="our-sample-program">Our sample program</h2>
 
@@ -245,7 +256,7 @@ PASS
   </section>
 </article>
 
-  </article>
+  </main>
     <!-- Javascripts -->
     <script src="https://brendanjryan.com/assets/js/script.js"></script>
     <script>

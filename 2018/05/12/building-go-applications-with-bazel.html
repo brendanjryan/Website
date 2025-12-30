@@ -22,25 +22,36 @@
   <meta name="twitter:card" content="summary" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://brendanjryan.com/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
-</head>
-<body class="w-100 helvetica">
-  <article class="content ma5-ns ma3 mb7">
-    <article class="w-100 w-70-l" style="margin: 0 auto">
-  <section class="text">
-      <header>
-          <h3 class="f2 b mb0 lh-title">Building Go Applications with Bazel</h3>
-          <h4 class="f5 fw5 lh-title">
-            May 12, 2018
-          </h4>
-      </header>
-  </section>
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+    }
 
-  <section class="text mt5 lh-copy">
-      <p>Let’s admit it - managing dependencies and building binaries is quite possibly the most frustrating and least fulfilling part of software development. To make matters worse, these frustrations only compound as your application grows - resulting in a hornet’s nest of bash scripts and fatalist debug instructions like “just clean the entire project and re-download all dependencies.”</p>
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: blue !important;
+    }
+  </style>
+
+</head>
+<body class="tc">
+  <main class="mw7 center ph3 ph4-ns pv4">
+    <article class="tl mw8 center">
+  <header class="tc mb5">
+    <h1 class="f3 fw4 mb2">Building Go Applications with Bazel</h1>
+    <time class="f7 gray">May 12, 2018</time>
+  </header>
+
+  <section class="lh-copy f6">
+    <p>Let’s admit it - managing dependencies and building binaries is quite possibly the most frustrating and least fulfilling part of software development. To make matters worse, these frustrations only compound as your application grows - resulting in a hornet’s nest of bash scripts and fatalist debug instructions like “just clean the entire project and re-download all dependencies.”</p>
 
 <p>In the last few years, a variety of tools which aim to break down this complexity have been developed and open sourced. Facebook’s <a href="https://github.com/facebook/buck"><code class="language-plaintext highlighter-rouge">buck</code></a> and Foursquare’s <a href="https://www.pantsbuild.org/"><code class="language-plaintext highlighter-rouge">pants</code></a> are two popular derivatives of Google’s internal <code class="language-plaintext highlighter-rouge">blaze</code> build tool, components of which have been open sourced under the <a href="https://bazel.build/"><code class="language-plaintext highlighter-rouge">bazel</code></a> project. These tools require a pretty hefty upfront investment to get setup, but will quickly pay dividends time and time over again as your builds are faster, easier to debug, and consistent across operating systems and architectures.</p>
 
@@ -278,7 +289,7 @@ Executed 4 out of 4 tests: 4 tests pass.
   </section>
 </article>
 
-  </article>
+  </main>
     <!-- Javascripts -->
     <script src="https://brendanjryan.com/assets/js/script.js"></script>
     <script>

@@ -22,25 +22,36 @@
   <meta name="twitter:card" content="summary" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://brendanjryan.com/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
-</head>
-<body class="w-100 helvetica">
-  <article class="content ma5-ns ma3 mb7">
-    <article class="w-100 w-70-l" style="margin: 0 auto">
-  <section class="text">
-      <header>
-          <h3 class="f2 b mb0 lh-title">Profiling Go Applications with Flamegraphs</h3>
-          <h4 class="f5 fw5 lh-title">
-            February 28, 2018
-          </h4>
-      </header>
-  </section>
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+    }
 
-  <section class="text mt5 lh-copy">
-      <p>Application performance issues are, by their very nature, unexpected - and always seem to rear their heads at the worst possible time. To make matters worse, many profiling tools are cold, convoluted, and downright confusing to use - taking user experience cues from fan favorites such as <code class="language-plaintext highlighter-rouge">valgrind</code> and <code class="language-plaintext highlighter-rouge">gdp</code>.</p>
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: blue !important;
+    }
+  </style>
+
+</head>
+<body class="tc">
+  <main class="mw7 center ph3 ph4-ns pv4">
+    <article class="tl mw8 center">
+  <header class="tc mb5">
+    <h1 class="f3 fw4 mb2">Profiling Go Applications with Flamegraphs</h1>
+    <time class="f7 gray">February 28, 2018</time>
+  </header>
+
+  <section class="lh-copy f6">
+    <p>Application performance issues are, by their very nature, unexpected - and always seem to rear their heads at the worst possible time. To make matters worse, many profiling tools are cold, convoluted, and downright confusing to use - taking user experience cues from fan favorites such as <code class="language-plaintext highlighter-rouge">valgrind</code> and <code class="language-plaintext highlighter-rouge">gdp</code>.</p>
 
 <p><code class="language-plaintext highlighter-rouge">Flamegraphs</code>, a tool invented by linux perf guru Brendan Gegg, bring some “warmth” to the complicated process of identifying and fixing performance issues by generating an SVG visualization layer on top of a normal linux performance trace dump. In this post, we will walk though the process of profiling a basic golang web application to by using <code class="language-plaintext highlighter-rouge">flamegraphs</code></p>
 
@@ -238,7 +249,7 @@ tone and intensity are provided only as a means to make the diagram easier to re
   </section>
 </article>
 
-  </article>
+  </main>
     <!-- Javascripts -->
     <script src="https://brendanjryan.com/assets/js/script.js"></script>
     <script>

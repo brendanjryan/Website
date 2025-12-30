@@ -22,25 +22,36 @@
   <meta name="twitter:card" content="summary" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://brendanjryan.com/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
-</head>
-<body class="w-100 helvetica">
-  <article class="content ma5-ns ma3 mb7">
-    <article class="w-100 w-70-l" style="margin: 0 auto">
-  <section class="text">
-      <header>
-          <h3 class="f2 b mb0 lh-title">Advanced Go Testing Techniques</h3>
-          <h4 class="f5 fw5 lh-title">
-            March 23, 2018
-          </h4>
-      </header>
-  </section>
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+    }
 
-  <section class="text mt5 lh-copy">
-      <p>Writing tests in <code class="language-plaintext highlighter-rouge">go</code> is extremely simple and straightforward, mostly due to the extremely powerful testing library and test runner (<code class="language-plaintext highlighter-rouge">go test</code>) which come bundled with the standard library. While the <a href="https://golang.org/pkg/testing/"><code class="language-plaintext highlighter-rouge">testing</code> </a> docs do a very good job of outlining basic applications - there are many tricks and design patterns that you can employ to make your tests even faster to write, easier to debug, and simpler to maintain. This article outlines some of these more “advanced” testing techniques and provides examples inspired by real-world use cases.</p>
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: blue !important;
+    }
+  </style>
+
+</head>
+<body class="tc">
+  <main class="mw7 center ph3 ph4-ns pv4">
+    <article class="tl mw8 center">
+  <header class="tc mb5">
+    <h1 class="f3 fw4 mb2">Advanced Go Testing Techniques</h1>
+    <time class="f7 gray">March 23, 2018</time>
+  </header>
+
+  <section class="lh-copy f6">
+    <p>Writing tests in <code class="language-plaintext highlighter-rouge">go</code> is extremely simple and straightforward, mostly due to the extremely powerful testing library and test runner (<code class="language-plaintext highlighter-rouge">go test</code>) which come bundled with the standard library. While the <a href="https://golang.org/pkg/testing/"><code class="language-plaintext highlighter-rouge">testing</code> </a> docs do a very good job of outlining basic applications - there are many tricks and design patterns that you can employ to make your tests even faster to write, easier to debug, and simpler to maintain. This article outlines some of these more “advanced” testing techniques and provides examples inspired by real-world use cases.</p>
 
 <h2 id="table-driven-tests-and-sub-tests">Table Driven Tests and Sub-Tests</h2>
 
@@ -222,7 +233,7 @@
   </section>
 </article>
 
-  </article>
+  </main>
     <!-- Javascripts -->
     <script src="https://brendanjryan.com/assets/js/script.js"></script>
     <script>
