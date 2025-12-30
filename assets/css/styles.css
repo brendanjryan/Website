@@ -55,161 +55,192 @@ a:hover {
   background-color: yellow;
 }
 
-.highlight table td {
-  padding: 5px;
+.highlighter-rouge .highlight,
+div.highlight {
+  background-color: #f6f8fa !important;
+  padding: 1.5rem !important;
+  border-radius: 6px !important;
+  overflow-x: auto !important;
+  margin: 2rem 0 !important;
 }
 
-.highlight table pre {
-  margin: 0;
+.highlighter-rouge .highlight pre,
+div.highlight pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
 }
 
-.highlight, .highlight .w {
-  color: #24292f;
-  background-color: #f6f8fa;
+.highlighter-rouge .highlight code,
+div.highlight code {
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #24292f !important;
 }
 
-.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv {
-  color: #cf222e;
+.highlight span.k,
+.highlight span.kd,
+.highlight span.kn,
+.highlight span.kp,
+.highlight span.kr,
+.highlight span.kv {
+  color: #cf222e !important;
+  font-weight: 600 !important;
 }
 
-.highlight .gr {
-  color: #f6f8fa;
+.highlight span.kt,
+.highlight span.kc {
+  color: #0550ae !important;
 }
 
-.highlight .gd {
-  color: #82071e;
-  background-color: #ffebe9;
+.highlight span.s,
+.highlight span.sa,
+.highlight span.sc,
+.highlight span.dl,
+.highlight span.sd,
+.highlight span.s2,
+.highlight span.se,
+.highlight span.sh,
+.highlight span.sx,
+.highlight span.s1,
+.highlight span.ss {
+  color: #0a3069 !important;
 }
 
-.highlight .nb {
-  color: #953800;
+.highlight span.c,
+.highlight span.ch,
+.highlight span.cd,
+.highlight span.cm,
+.highlight span.cp,
+.highlight span.cpf,
+.highlight span.c1,
+.highlight span.cs {
+  color: #6e7781 !important;
+  font-style: italic !important;
 }
 
-.highlight .nc {
-  color: #953800;
+.highlight span.nf,
+.highlight span.fm {
+  color: #8250df !important;
 }
 
-.highlight .no {
-  color: #953800;
+.highlight span.nd {
+  color: #8250df !important;
 }
 
-.highlight .nn {
-  color: #953800;
+.highlight span.nb {
+  color: #953800 !important;
 }
 
-.highlight .sr {
-  color: #116329;
+.highlight span.nc {
+  color: #953800 !important;
 }
 
-.highlight .na {
-  color: #116329;
+.highlight span.no {
+  color: #953800 !important;
 }
 
-.highlight .nt {
-  color: #116329;
+.highlight span.nn {
+  color: #953800 !important;
 }
 
-.highlight .gi {
-  color: #116329;
-  background-color: #dafbe1;
+.highlight span.l,
+.highlight span.ld,
+.highlight span.m,
+.highlight span.mb,
+.highlight span.mf,
+.highlight span.mh,
+.highlight span.mi,
+.highlight span.il,
+.highlight span.mo,
+.highlight span.mx {
+  color: #0550ae !important;
 }
 
-.highlight .ges {
-  font-weight: bold;
-  font-style: italic;
+.highlight span.o,
+.highlight span.ow {
+  color: #0550ae !important;
 }
 
-.highlight .kc {
-  color: #0550ae;
+.highlight span.nv,
+.highlight span.vc,
+.highlight span.vg,
+.highlight span.vi,
+.highlight span.vm {
+  color: #0550ae !important;
 }
 
-.highlight .l, .highlight .ld, .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
-  color: #0550ae;
+.highlight span.sr {
+  color: #116329 !important;
 }
 
-.highlight .sb {
-  color: #0550ae;
+.highlight span.na {
+  color: #116329 !important;
 }
 
-.highlight .bp {
-  color: #0550ae;
+.highlight span.nt {
+  color: #116329 !important;
 }
 
-.highlight .ne {
-  color: #0550ae;
+.highlight span.gi {
+  color: #116329 !important;
+  background-color: #dafbe1 !important;
 }
 
-.highlight .nl {
-  color: #0550ae;
+.highlight span.gd {
+  color: #82071e !important;
+  background-color: #ffebe9 !important;
 }
 
-.highlight .py {
-  color: #0550ae;
+.highlight span.err {
+  color: #cf222e !important;
 }
 
-.highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
-  color: #0550ae;
+.highlight span.ge {
+  font-style: italic !important;
 }
 
-.highlight .o, .highlight .ow {
-  color: #0550ae;
+.highlight span.gs {
+  font-weight: bold !important;
 }
 
-.highlight .gh {
-  color: #0550ae;
-  font-weight: bold;
+.highlight span.ges {
+  font-weight: bold !important;
+  font-style: italic !important;
 }
 
-.highlight .gu {
-  color: #0550ae;
-  font-weight: bold;
+.highlight span.gh,
+.highlight span.gu {
+  color: #0550ae !important;
+  font-weight: bold !important;
 }
 
-.highlight .s, .highlight .sa, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss {
-  color: #0a3069;
+.highlight span.gl,
+.highlight span.gt {
+  color: #6e7781 !important;
 }
 
-.highlight .nd {
-  color: #8250df;
+.highlight span.gr {
+  color: #cf222e !important;
 }
 
-.highlight .nf, .highlight .fm {
-  color: #8250df;
+.highlight span.p,
+.highlight span.n,
+.highlight span.ni,
+.highlight span.si,
+.highlight span.w {
+  color: #24292f !important;
 }
 
-.highlight .err {
-  color: #f6f8fa;
-  background-color: #82071e;
-}
-
-.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs {
-  color: #6e7781;
-}
-
-.highlight .gl {
-  color: #6e7781;
-}
-
-.highlight .gt {
-  color: #6e7781;
-}
-
-.highlight .ni {
-  color: #24292f;
-}
-
-.highlight .si {
-  color: #24292f;
-}
-
-.highlight .ge {
-  color: #24292f;
-  font-style: italic;
-}
-
-.highlight .gs {
-  color: #24292f;
-  font-weight: bold;
+.highlight span.sb,
+.highlight span.bp,
+.highlight span.ne,
+.highlight span.nl,
+.highlight span.py {
+  color: #0550ae !important;
 }
 
 /*# sourceMappingURL=styles.css.map */
