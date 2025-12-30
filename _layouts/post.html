@@ -2,17 +2,13 @@
 layout: default
 ---
 
-<article class="w-100 w-70-l" style="margin: 0 auto">
-  <section class="text">
-      <header>
-          <h3 class="f2 b mb0 lh-title">{{page.title}}</h3>
-          <h4 class="f5 fw5 lh-title">
-            {{ page.date | date: '%B %d, %Y' }}
-          </h4>
-      </header>
-  </section>
+<article class="tl mw8 center">
+  <header class="tc mb5">
+    <h1 class="f3 fw4 mb2">{{page.title}}</h1>
+    <time class="f7 gray">{{ page.date | date: '%B %d, %Y' }}</time>
+  </header>
 
-  <section class="text mt5 lh-copy">
-      {{content}}
+  <section class="lh-copy f6">
+    {{content}}
   </section>
 </article>

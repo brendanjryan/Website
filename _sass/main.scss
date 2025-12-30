@@ -22,9 +22,17 @@
 
 .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
+.highlight {
+  background-color: #f6f8fa;
+  padding: 1rem;
+  border-radius: 3px;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.5;
+  margin: 1.5rem 0;
+}
 .highlight, .highlight .w {
   color: #24292f;
-  background-color: #f6f8fa;
 }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv {
   color: #cf222e;

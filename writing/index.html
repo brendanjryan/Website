@@ -3,16 +3,15 @@ layout: default
 title: Writing
 ---
 
-<header>
-  <h3 class="f2 b mb0 lh-title">Writing</h3>
+<header class="mb4">
+  <h1 class="f3 fw4">Writing</h1>
 </header>
-<article>
-    <ul class="list pl0 mv5">
-      {% for post in site.posts %}
-        <l1 class="db mv4">
-          <a href="{{ post.url }}" class="f3 b near-black mb0 link lh-title">{{post.title}}</a>
-           <p class="fw3">{{ post.date | date: '%B %d, %Y' }}</p>
-        </l1>
-      {% endfor %}
-    </ul>
-</article>
+
+<ul class="list pl0 tl">
+  {% for post in site.posts %}
+    <li class="mv3">
+      <a href="{{ post.url }}" class="f6 db">{{post.title}}</a>
+      <div class="f7 gray mt1">{{ post.date | date: '%B %d, %Y' }}</div>
+    </li>
+  {% endfor %}
+</ul>
