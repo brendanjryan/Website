@@ -49,33 +49,119 @@
     }
 
     /* Syntax highlighting - GitHub-inspired theme */
-    .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+    /* Using element.class selectors for maximum specificity */
+    div.highlighter-rouge div.highlight pre.highlight code span.k,
+    div.highlighter-rouge div.highlight pre.highlight code span.kd,
+    div.highlighter-rouge div.highlight pre.highlight code span.kn,
+    div.highlighter-rouge div.highlight pre.highlight code span.kp,
+    div.highlighter-rouge div.highlight pre.highlight code span.kr,
+    div.highlighter-rouge div.highlight pre.highlight code span.kv,
+    .highlight code span.k,
+    .highlight code span.kd,
+    .highlight code span.kn,
+    .highlight code span.kp,
+    .highlight code span.kr,
+    .highlight code span.kv {
       color: #cf222e !important;
-      font-weight: 600;
+      font-weight: 600 !important;
     }
-    .highlight .kt, .highlight .kc {
+    div.highlighter-rouge div.highlight pre.highlight code span.kt,
+    div.highlighter-rouge div.highlight pre.highlight code span.kc,
+    .highlight code span.kt,
+    .highlight code span.kc {
       color: #0550ae !important;
     }
-    .highlight .s, .highlight .sa, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss {
+    div.highlighter-rouge div.highlight pre.highlight code span.s,
+    div.highlighter-rouge div.highlight pre.highlight code span.s1,
+    div.highlighter-rouge div.highlight pre.highlight code span.s2,
+    div.highlighter-rouge div.highlight pre.highlight code span.sa,
+    div.highlighter-rouge div.highlight pre.highlight code span.sb,
+    div.highlighter-rouge div.highlight pre.highlight code span.sc,
+    div.highlighter-rouge div.highlight pre.highlight code span.dl,
+    div.highlighter-rouge div.highlight pre.highlight code span.sd,
+    div.highlighter-rouge div.highlight pre.highlight code span.se,
+    div.highlighter-rouge div.highlight pre.highlight code span.sh,
+    div.highlighter-rouge div.highlight pre.highlight code span.sx,
+    div.highlighter-rouge div.highlight pre.highlight code span.ss,
+    .highlight code span.s,
+    .highlight code span.s1,
+    .highlight code span.s2,
+    .highlight code span.sa,
+    .highlight code span.sb,
+    .highlight code span.sc,
+    .highlight code span.dl,
+    .highlight code span.sd,
+    .highlight code span.se,
+    .highlight code span.sh,
+    .highlight code span.sx,
+    .highlight code span.ss {
       color: #0a3069 !important;
     }
-    .highlight .nf, .highlight .fm, .highlight .nd {
+    div.highlighter-rouge div.highlight pre.highlight code span.nf,
+    div.highlighter-rouge div.highlight pre.highlight code span.fm,
+    div.highlighter-rouge div.highlight pre.highlight code span.nd,
+    .highlight code span.nf,
+    .highlight code span.fm,
+    .highlight code span.nd {
       color: #8250df !important;
     }
-    .highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs {
+    div.highlighter-rouge div.highlight pre.highlight code span.c,
+    div.highlighter-rouge div.highlight pre.highlight code span.c1,
+    div.highlighter-rouge div.highlight pre.highlight code span.ch,
+    div.highlighter-rouge div.highlight pre.highlight code span.cd,
+    div.highlighter-rouge div.highlight pre.highlight code span.cm,
+    div.highlighter-rouge div.highlight pre.highlight code span.cp,
+    div.highlighter-rouge div.highlight pre.highlight code span.cpf,
+    div.highlighter-rouge div.highlight pre.highlight code span.cs,
+    .highlight code span.c,
+    .highlight code span.c1,
+    .highlight code span.ch,
+    .highlight code span.cd,
+    .highlight code span.cm,
+    .highlight code span.cp,
+    .highlight code span.cpf,
+    .highlight code span.cs {
       color: #6e7781 !important;
-      font-style: italic;
+      font-style: italic !important;
     }
-    .highlight .o, .highlight .ow, .highlight .m, .highlight .mi, .highlight .mf, .highlight .l, .highlight .nv {
+    div.highlighter-rouge div.highlight pre.highlight code span.o,
+    div.highlighter-rouge div.highlight pre.highlight code span.ow,
+    div.highlighter-rouge div.highlight pre.highlight code span.m,
+    div.highlighter-rouge div.highlight pre.highlight code span.mi,
+    div.highlighter-rouge div.highlight pre.highlight code span.mf,
+    div.highlighter-rouge div.highlight pre.highlight code span.l,
+    div.highlighter-rouge div.highlight pre.highlight code span.nv,
+    .highlight code span.o,
+    .highlight code span.ow,
+    .highlight code span.m,
+    .highlight code span.mi,
+    .highlight code span.mf,
+    .highlight code span.l,
+    .highlight code span.nv {
       color: #0550ae !important;
     }
-    .highlight .nb, .highlight .nc, .highlight .no, .highlight .nn {
+    div.highlighter-rouge div.highlight pre.highlight code span.nb,
+    div.highlighter-rouge div.highlight pre.highlight code span.nc,
+    div.highlighter-rouge div.highlight pre.highlight code span.no,
+    div.highlighter-rouge div.highlight pre.highlight code span.nn,
+    .highlight code span.nb,
+    .highlight code span.nc,
+    .highlight code span.no,
+    .highlight code span.nn {
       color: #953800 !important;
     }
-    .highlight .nt, .highlight .na, .highlight .sr {
+    div.highlighter-rouge div.highlight pre.highlight code span.nt,
+    div.highlighter-rouge div.highlight pre.highlight code span.na,
+    div.highlighter-rouge div.highlight pre.highlight code span.sr,
+    .highlight code span.nt,
+    .highlight code span.na,
+    .highlight code span.sr {
       color: #116329 !important;
     }
-    .highlight .p, .highlight .n {
+    div.highlighter-rouge div.highlight pre.highlight code span.p,
+    div.highlighter-rouge div.highlight pre.highlight code span.n,
+    .highlight code span.p,
+    .highlight code span.n {
       color: #24292f !important;
     }
   </style>
