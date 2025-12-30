@@ -10,8 +10,8 @@ title: Writing
 <ul class="list pl0 tl">
   {% for post in site.posts %}
     <li class="mv3">
-      <a href="{{ post.url }}" class="f6 db">{{post.title}}</a>
-      <div class="f7 gray mt1">{{ post.date | date: '%B %d, %Y' }}</div>
+      <a href="{{ post.url }}" class="f db">{{post.title}}</a>
+      <div class="f6 gray mt1">{{ post.date | date: '%B %d, %Y' }}</div>
     </li>
   {% endfor %}
 </ul>
