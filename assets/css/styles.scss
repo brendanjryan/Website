@@ -1,14 +1,9 @@
 ---
 ---
 
-@import "breakpoints";
 @import "type";
 @import "colors";
-
-// global imports
 @import "global";
-
-// This file should only be imports
 
 .bg-yellow {
   background-color: yellow;
